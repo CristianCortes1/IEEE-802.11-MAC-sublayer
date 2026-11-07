@@ -14,12 +14,13 @@ Página educativa en español para estudiar IEEE 802.11 y la capa de enlace de d
 - Parcial de 16 ejercicios con selección de una, dos o tres respuestas y asociaciones mediante listas desplegables.
 - Calificación, explicación y enlaces a las secciones que deben repasarse.
 - Diseño adaptable a móviles y navegación con teclado.
+- Modos claro y oscuro: botón en la cabecera, preferencia guardada y tema del sistema en la primera visita.
 
 ## Uso
 
 Abre `index.html` en un navegador. No necesita instalación ni compilación. También puedes servir esta carpeta con cualquier servidor de archivos estáticos.
 
-Los archivos `style.css` y `app.js` deben mantenerse junto a `index.html`. Las fuentes de Google Fonts requieren conexión; si no está disponible, se usan fuentes alternativas del sistema. El contenido y los ejercicios se ejecutan localmente en el navegador.
+Los archivos `style.css`, `app.js` y `theme.js` deben mantenerse junto a `index.html`. Las fuentes de Google Fonts requieren conexión; si no está disponible, se usan fuentes alternativas del sistema. El contenido y los ejercicios se ejecutan localmente en el navegador.
 
 ## Alcance
 
