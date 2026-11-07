@@ -23,7 +23,7 @@ const glossary={
 'BSSID':['Identificador de un BSS, de 48 bits; en infraestructura suele corresponder a la dirección MAC de la interfaz del AP que presta ese servicio.'],
 'SSID':['Nombre de la red inalámbrica anunciado al usuario; no es lo mismo que BSSID.'],
 'sistema de distribución':['Mecanismo que interconecta puntos de acceso y otras redes; puede utilizar Ethernet.'],
-'dirección MAC':['Identificador de enlace de 48 bits usado por interfaces IEEE 802. Se suele escribir en seis grupos hexadecimales. Puede ser administrado localmente y cambiar por privacidad.'],
+'dirección MAC':['Identificador de enlace de 48 bits usado por interfaces IEEE 802. Se suele escribir en seis grupos hexadecimales. Cada pareja de cifras hexadecimales representa un byte.'],
 'bit':['Unidad binaria de información que toma el valor 0 o 1.'],
 'byte':['Grupo de ocho bits; también llamado octeto.'],
 'hexadecimal':['Sistema numérico de base 16 que usa los símbolos 0–9 y A–F.'],
@@ -40,15 +40,13 @@ const glossary={
 'backoff':['Espera aleatoria expresada en ranuras. El contador disminuye con el canal libre y se congela cuando se ocupa.'],
 'ventana de contención':['Rango del que se elige el contador de backoff; con parámetro CW se elige un entero entre 0 y CW, inclusive.'],
 'CW':['Contention Window: parámetro de la ventana de contención. Tras un fallo crece, hasta CWmax; tras un éxito se restablece a CWmin.'],
-'EDCA':['Enhanced Distributed Channel Access: acceso que distingue categorías de tráfico, con distintos parámetros de espera y contención.'],
-'AIFS':['Arbitration Interframe Space: intervalo usado en EDCA, configurable según la categoría de acceso.'],
 'RTS':['Request to Send: trama de control con la que un emisor solicita iniciar un intercambio protegido.'],
 'CTS':['Clear to Send: trama de control que responde a RTS y anuncia la reserva temporal a estaciones que puedan oírla.'],
 'NAV':['Network Allocation Vector: temporizador local que representa cuánto tiempo se considera reservado el medio a partir de información de duración recibida. Es escucha virtual.'],
 'nodo oculto':['Estación que no detecta a otra transmisora, aunque ambas pueden alcanzar al mismo receptor; sus transmisiones pueden colisionar allí.'],
 'ACK':['Acknowledgement: trama de control que confirma recepción correcta en un intercambio que requiere confirmación. No demuestra entrega a una aplicación.'],
 'FCS':['Frame Check Sequence: campo de comprobación al final de la trama; permite detectar errores mediante un CRC de 32 bits.'],
-'CRC':['Cyclic Redundancy Check: cálculo matemático sobre bits que permite detectar muchos patrones de error; no corrige errores ni es una prueba criptográfica.'],
+'CRC':['Cyclic Redundancy Check: cálculo matemático sobre bits que permite detectar muchos patrones de error; permite detectar errores, pero no reconstruye los bits originales.'],
 'trama':['Unidad de información de capa 2, compuesta por campos de control, direcciones, contenido cuando corresponde y comprobación de errores.'],
 'unicast':['Envío dirigido a un único destinatario.'],
 'broadcast':['Envío destinado a todas las estaciones del dominio de difusión.'],
@@ -61,14 +59,11 @@ const glossary={
 'Control':['Control: clase de tramas que ayuda a coordinar el acceso y confirmar intercambios.'],
 'Data':['Datos: clase de tramas que transporta información de protocolos superiores; existen subtipos sin carga de usuario.'],
 'beacon':['Trama de administración periódica del AP que anuncia información del BSS.'],
-'autenticación':['Procedimiento de identificación o validación para establecer una relación; su significado y seguridad dependen del método usado.'],
 'asociación':['Procedimiento por el que una estación establece su pertenencia a un BSS de infraestructura.'],
 'Frame Control':['Campo inicial con versión, tipo, subtipo e indicadores de la trama, como Retry y To DS/From DS.'],
 'Duration/ID':['Campo que normalmente anuncia duración restante de un intercambio; en determinados subtipos tiene otro significado.'],
 'To DS/From DS':['Indicadores que señalan la relación de una trama con el sistema de distribución y determinan cómo interpretar sus direcciones.'],
 'Sequence Control':['Campo con número de secuencia y número de fragmento.'],
-'QoS':['Quality of Service: mecanismos para tratar de forma diferenciada clases de tráfico, como voz y datos.'],
-'Block ACK':['Confirmación que informa sobre la recepción de varias tramas, reduciendo el coste de confirmarlas individualmente.'],
 'semidúplex':['Comunicación en la que se transmite o recibe por turnos en un mismo medio.'],
 'dúplex completo':['Comunicación que permite transmitir y recibir simultáneamente en un enlace.'],
 'sobrecarga':['Tiempo o información adicional necesarios para coordinar una comunicación, aparte de los datos útiles.']};
@@ -108,7 +103,7 @@ const questions=[
 {q:'A y C no se oyen, pero ambas alcanzan al AP. ¿Qué problema describe?',o:['Nodo oculto','Dirección MAC demasiado larga','Duplicación del nombre SSID'],a:[0],s:4,e:'Las estaciones ocultas pueden creer libre el medio y colisionar en el receptor común.'},
 {q:'Selecciona dos afirmaciones correctas sobre RTS/CTS.',o:['CTS puede informar a quien no oyó RTS','Es obligatorio antes de cualquier trama','Introduce sobrecarga','Elimina la posibilidad de colisión de RTS'],a:[0,2],s:4,e:'CTS puede alcanzar al nodo oculto. Las tramas extra cuestan tiempo y RTS puede colisionar.'},
 {q:'El emisor no recibe ACK. ¿Qué puede haber ocurrido? Elige tres posibilidades.',o:['Se perdió la trama de datos','Se perdió el ACK','Hubo interferencia en la recepción','El destinatario final necesariamente leyó el mensaje'],a:[0,1,2],s:5,e:'La ausencia de ACK no permite identificar una única causa ni dice nada sobre la lectura del mensaje.'},
-{q:'¿Para qué sirve FCS?',o:['Corregir automáticamente todos los bits dañados','Detectar errores mediante CRC','Cifrar la identidad del usuario'],a:[1],s:5,e:'FCS permite detectar errores; no los corrige y no es cifrado.'},
+{q:'¿Para qué sirve FCS?',o:['Corregir automáticamente todos los bits dañados','Detectar errores mediante CRC','Asignar el siguiente turno de transmisión'],a:[1],s:5,e:'FCS permite detectar errores; no los corrige ni asigna turnos de transmisión.'},
 {q:'Selecciona tres asociaciones correctas.',o:['Beacon → administración','RTS → control','Trama que transporta contenido de usuario → datos','ACK → administración'],a:[0,1,2],s:6,e:'Beacon anuncia información del BSS; RTS y ACK son control; las tramas de datos pueden transportar contenido de usuario.'},
 {q:'Selecciona dos diferencias correctas entre Ethernet y Wi-Fi.',o:['Ethernet conmutado dúplex completo no usa CSMA/CD','Wi-Fi puede utilizar hasta cuatro campos de dirección','Wi-Fi siempre tiene solo origen y destino','Ethernet necesita RTS/CTS para cada envío'],a:[0,1],s:2,e:'Los enlaces modernos Ethernet dúplex completo no compiten con CSMA/CD y 802.11 distingue varias funciones de dirección.'},
 {q:'Asocia el término NAV con su definición.',o:['Temporizador local de reserva virtual del medio','Nombre visible de la red','Campo que corrige errores'],a:[0],s:4,e:'NAV representa el tiempo que se considera reservado el medio.',match:true},
@@ -116,7 +111,7 @@ const questions=[
 {q:'¿Qué término corresponde a «intervalo corto antes de respuestas inmediatas como ACK»?',o:['DIFS','SIFS','CW'],a:[1],s:3,e:'SIFS permite responder antes de que comience una nueva competencia DCF.',match:true},
 {q:'¿Qué término corresponde a «trama de control que confirma recepción correcta»?',o:['ACK','FCS','SSID'],a:[0],s:5,e:'ACK es una trama de confirmación; FCS es un campo de comprobación.',match:true},
 {q:'Asocia BSSID con su definición.',o:['Nombre de red elegido para mostrar al usuario','Identificador de 48 bits de un conjunto básico de servicio','Contador aleatorio de acceso al medio'],a:[1],s:2,e:'BSSID identifica el BSS; SSID es el nombre de red.',match:true},
-{q:'¿Qué término corresponde a «clase de tramas que permite descubrir y mantener la red»?',o:['Data','Control','Management'],a:[2],s:6,e:'Management incluye beacon y tramas de autenticación y asociación.',match:true}
+{q:'¿Qué término corresponde a «clase de tramas que permite descubrir y mantener la red»?',o:['Data','Control','Management'],a:[2],s:6,e:'Management incluye beacon y tramas de asociación.',match:true}
 ];
 const quiz=document.getElementById('quiz');quiz.innerHTML=questions.map((q,i)=>`<div class="question"><fieldset><legend><span class="qmeta">EJERCICIO ${String(i+1).padStart(2,'0')} · ${q.match?'ASOCIACIÓN':q.a.length+' RESPUESTA'+(q.a.length>1?'S CORRECTAS':' CORRECTA')}</span>${q.q}</legend>${q.match?`<label for="q${i}" class="qmeta">Selecciona la correspondencia</label><select id="q${i}" name="q${i}"><option value="">Elige una opción…</option>${q.o.map((o,j)=>`<option value="${j}">${o}</option>`).join('')}</select>`:q.o.map((o,j)=>`<label class="option"><input type="${q.a.length===1?'radio':'checkbox'}" name="q${i}" value="${j}"><span>${o}</span></label>`).join('')}</fieldset><div id="feedback${i}"></div></div>`).join('');
 document.getElementById('grade').onclick=()=>{let score=0;questions.forEach((q,i)=>{const selected=q.match?(quiz.elements['q'+i].value===''?[]:[Number(quiz.elements['q'+i].value)]):Array.from(quiz.querySelectorAll(`input[name="q${i}"]:checked`)).map(x=>Number(x.value));const correct=selected.length===q.a.length&&selected.every(x=>q.a.includes(x));if(correct)score++;document.getElementById('feedback'+i).innerHTML=`<div class="feedback ${correct?'correct':'wrong'}">${correct?'✓ Correcto.':selected.length?'↗ Revisa esta respuesta.':'○ Sin responder.'} ${q.e}${correct?'':`<br>Respuesta correcta: ${q.a.map(x=>q.o[x]).join('; ')}.<a href="#tema${q.s}">Repasar: ${lessons[q.s-1][0]} →</a>`}</div>`});const r=document.getElementById('result');r.textContent=`${score} / ${questions.length} puntos · ${Math.round(score/questions.length*100)} % · Nota de práctica: ${(score/questions.length*5).toFixed(1)} / 5.0`;r.scrollIntoView({behavior:'smooth',block:'center'})};

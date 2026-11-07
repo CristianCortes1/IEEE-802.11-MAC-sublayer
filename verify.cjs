@@ -174,5 +174,5 @@ assert.equal(dialog.open,false);
 popupEvents.click(popupClick({target:{closest:()=>({getAttribute:()=> '#def-unknown'})}}));
 assert.equal(prevented,false);
 for(const match of html.matchAll(/(?:src|href)="([^"#?]+\.(?:js|css))(?:\?[^"#]*)?"/g)) assert.ok(fs.existsSync(match[1]),'Missing asset '+match[1]);
-for(const file of ['index.html','app.js','architecture.js','lessons.js','lab-scenes.js','backoff-animation.js','mini-quizzes.js','glossary-dialog.js'])assert.doesNotMatch(fs.readFileSync(file,'utf8'),/capa\s*3|\bIP\b|router|encaminamiento/i);
+for(const file of ['index.html','app.js','architecture.js','lessons.js','lab-scenes.js','backoff-animation.js','mini-quizzes.js','glossary-dialog.js'])assert.doesNotMatch(fs.readFileSync(file,'utf8'),/capa\s*3|\bIP\b|router|encaminamiento|\bQoS\b|\bEDCA\b|\bAIFS\b|seguridad|autenticación|Block ACK/i);
 console.log('PASS: backoff animation/playback/pause/reset, architecture, chapters, glossary popup, assets, scope, final exam, mini quizzes, review links and laboratories.');

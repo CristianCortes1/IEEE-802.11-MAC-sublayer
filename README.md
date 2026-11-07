@@ -28,7 +28,7 @@ Los archivos `style.css`, `app.js`, `architecture.js`, `lessons.js`, `lab-scenes
 
 ## Alcance
 
-Los ejemplos de acceso al canal explican DCF clásico con tiempos ilustrativos. El contenido distingue mecanismos modernos como EDCA y Block ACK. Las fuentes oficiales de consulta están enlazadas al final de la página.
+La guía se centra en fundamentos de las capas 1 y 2: señales, medio compartido, estaciones y AP, subcapas LLC/MAC, tramas, DCF, CSMA/CA, RTS/CTS, NAV, FCS y ACK. Los ejemplos de acceso al canal usan DCF clásico con tiempos ilustrativos. Las fuentes oficiales de consulta están enlazadas al final de la página.
 
 ## Verificación
 
