@@ -1,4 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+.self-check{margin:22px 0;padding:18px 22px;border:1px solid var(--line);border-radius:9px}
+.self-check summary{cursor:pointer;font-weight:600;line-height:1.5}
+.self-check[open] summary{color:var(--teal)}
+.self-check p{margin-bottom:0}
+.self-check summary:focus-visible{outline:3px solid #e4a22b;outline-offset:5px}
+.lab-scene{margin:20px 0 25px;padding:20px;background:#0c202b;border:1px solid #48606c;border-radius:10px}
+.scene-nodes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.scene-node{padding:14px;border:1px solid #48606c;border-radius:8px;line-height:1.4}
+.scene-node strong{display:block;font-size:13px;color:#b9f56a;margin-bottom:8px}
+.scene-node span{font-size:13px;color:#e1edf3}
+.scene-exchange{padding:18px 8px;margin:16px 0 8px;border-top:1px dashed #48606c;border-bottom:1px dashed #48606c;text-align:center;color:#b9f56a;font-weight:600;font-size:15px;line-height:1.5}
+.lab-scene figcaption{font-size:12px;line-height:1.6;color:#b8cbd4}
+@media(max-width:700px){.scene-nodes{grid-template-columns:1fr}.scene-node{padding:10px}.lab-scene{padding:14px}.scene-node strong{margin-bottom:4px}}
 /* Theme is applied before rendering to avoid a flash of the wrong palette. */
 :root{color-scheme:light}
 header{gap:16px}header>a{margin-left:auto;white-space:nowrap}
