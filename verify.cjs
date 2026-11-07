@@ -142,7 +142,7 @@ while(timers.size){assert.ok(++ticks<=13,'Playback must stop at the last step');
 assert.match(get('backoff-stage').innerHTML,/PASO 13 DE 13/);
 assert.equal(get('backoff-next').disabled,true);
 assert.equal(get('backoff-play').attributes['aria-pressed'],'false');
-get('backoff-play').onclick();assert.match(get('backoff-stage').innerHTML,/PASO 1 DE 13/);
+get('backoff-play').onclick();assert.match(get('backoff-stage').innerHTML,/PASO 2 DE 13/);
 context.document.hidden=true;popupEvents.visibilitychange();assert.equal(timers.size,0);context.document.hidden=false;
 get('backoff-reset').onclick();assert.equal(get('backoff-progress').attributes['aria-valuenow'],'1');
 const dialog = get('term-dialog');
