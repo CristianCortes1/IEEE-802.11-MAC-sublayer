@@ -2,6 +2,10 @@
 
 Página educativa en español para estudiar IEEE 802.11 y la capa de enlace de datos.
 
+## Demo
+
+[Abrir la demo interactiva](https://cristiancortes1.github.io/IEEE-802.11-MAC-sublayer/)
+
 ## Contenido
 
 - Siete capítulos: introducción, arquitectura y MAC, CSMA/CA, RTS/CTS, ACK y errores, tramas y conclusiones.
