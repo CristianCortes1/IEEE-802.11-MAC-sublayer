@@ -8,12 +8,14 @@ function element() {
   const children = new Map();
   return {
     innerHTML: '', textContent: '', elements: {}, value: '',
+    insertAdjacentHTML(_position,html){this.innerHTML+=html;},
+    addEventListener(event,handler){this['on'+event]=handler;},
     querySelector(selector) {
       if (!children.has(selector)) children.set(selector, {focus(){}});
       return children.get(selector);
     },
     querySelectorAll(selector) {
-      const name = selector.match(/name="(q\d+)"/);
+      const name = selector.match(/name="([^"]+)"/);
       return name ? (selections[name[1]] || []).map(value=>({value:String(value)})) : [];
     },
     reset(){selections={};Object.values(this.elements).forEach(e=>e.value='');},
@@ -30,7 +32,7 @@ const context = {
   IntersectionObserver: class {observe(){}}
 };
 vm.createContext(context);
-for (const file of ['lessons.js','lab-scenes.js','app.js']) vm.runInContext(fs.readFileSync(file,'utf8'),context,{filename:file});
+for (const file of ['lessons.js','lab-scenes.js','app.js','mini-quizzes.js']) vm.runInContext(fs.readFileSync(file,'utf8'),context,{filename:file});
 vm.runInContext(`
   if(lessons.length!==7||questions.length!==16)throw Error('Unexpected curriculum size');
   for(const q of questions){
@@ -69,6 +71,39 @@ for(const [id,count] of [['simulador',7],['hidden-lab',5],['retry-lab',5]]) {
   assert.match(lab.innerHTML,new RegExp('1 / '+count));
 }
 const html=fs.readFileSync('index.html','utf8');
+const miniQuizzes=vm.runInContext('topicQuizzes',context);
+assert.equal(miniQuizzes.length,7);
+for(const [index,items] of miniQuizzes.entries()){
+  const topic=index+1, prefix=`mini-${topic}`, form=get(prefix), result=get(`${prefix}-result`);
+  assert.equal(items.length,3);
+  assert.match(get(`tema${topic}`).innerHTML,new RegExp(`id="${prefix}"`));
+  for(const [i,q] of items.entries()){
+    assert.ok(q.a.length>0 && q.a.every(n=>q.o[n]));
+    if(q.match)form.elements[`${prefix}-q${i}`]={value:''};
+  }
+  form.onsubmit({preventDefault(){}});
+  assert.match(result.textContent,/^0 de 3/);
+  assert.match(get(`${prefix}-feedback0`).innerHTML,/Sin responder/);
+  for(const [i,q] of items.entries()){
+    if(q.match)form.elements[`${prefix}-q${i}`].value=String(q.a[0]);
+    else selections[`${prefix}-q${i}`]=[...q.a];
+  }
+  form.onsubmit({preventDefault(){}});
+  assert.match(result.textContent,/^3 de 3/);
+  const multi=items.findIndex(q=>q.a.length>1), q=items[multi];
+  selections[`${prefix}-q${multi}`].push(q.o.findIndex((_,i)=>!q.a.includes(i)));
+  form.onsubmit({preventDefault(){}});
+  assert.match(result.textContent,/^2 de 3/);
+  assert.match(get(`${prefix}-feedback${multi}`).innerHTML,new RegExp(`href="#tema${topic}"`));
+  form.onchange();
+  assert.equal(result.textContent,'');
+  assert.equal(get(`${prefix}-feedback${multi}`).innerHTML,'');
+  form.onsubmit({preventDefault(){}});
+  form.onreset();
+  assert.equal(result.textContent,'');
+  assert.equal(get(`${prefix}-feedback0`).innerHTML,'');
+}
+assert.equal(get('result').textContent,''); // Mini quizzes must not alter final exam results.
 for(const match of html.matchAll(/(?:src|href)="([^"#]+\.(?:js|css))"/g)) assert.ok(fs.existsSync(match[1]),'Missing asset '+match[1]);
-for(const file of ['index.html','app.js','lessons.js','lab-scenes.js'])assert.doesNotMatch(fs.readFileSync(file,'utf8'),/capa\s*3|\bIP\b|router|encaminamiento/i);
-console.log('PASS: chapters, glossary, local assets, scope, quiz grading/review/reset, laboratory navigation and scenes.');
+for(const file of ['index.html','app.js','lessons.js','lab-scenes.js','mini-quizzes.js'])assert.doesNotMatch(fs.readFileSync(file,'utf8'),/capa\s*3|\bIP\b|router|encaminamiento/i);
+console.log('PASS: chapters, glossary, assets, scope, final exam, 7 mini quizzes (21 questions), review links, laboratory navigation and scenes.');
