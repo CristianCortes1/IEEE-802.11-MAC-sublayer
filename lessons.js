@@ -60,7 +60,10 @@ function buildLessons(t, slug) {
       <ol><li>La estación tiene una trama pendiente y el medio estaba ocupado: espera a que quede libre.</li><li>Espera DIFS de canal libre.</li><li>Usa el contador aleatorio de backoff correspondiente y descuenta una unidad por ranura libre.</li><li>Si el medio se ocupa, congela el contador: conserva lo que faltaba.</li><li>Cuando vuelve a estar libre durante DIFS, continúa descontando.</li><li>Al llegar a cero, inicia la transmisión. Si otra estación llega a cero a la vez, aún puede haber colisión.</li></ol>
       <div class="callout"><strong>Matiz del procedimiento:</strong> este recorrido muestra un caso con contención tras encontrar el medio ocupado. DCF también permite acceso inicial sin un nuevo sorteo en ciertas condiciones de medio libre y contempla backoff después de una transmisión. No debes memorizar «cada trama siempre sortea, espera y luego transmite» como una regla universal.</div>
       <h3>5. Ejemplo numérico: A obtiene 3 y C obtiene 5</h3>
+      <div id="backoff-animation"></div>
+      <details class="self-check"><summary>Ver también el resumen en tabla</summary>
       ${table(['Momento','Contador A','Contador C','Qué sucede'],[['Tras DIFS','3','5','Ambas tienen permiso para contar ranuras libres.'],['Una ranura libre','2','4','Ninguna transmite todavía.'],['Dos ranuras más','0','2','A inicia su transmisión; C congela el 2.'],['Durante DATOS, SIFS y ACK','Transmitiendo / esperando ACK','2','C no consume las dos ranuras pendientes.'],['Intercambio terminado + DIFS','Finalizó su intercambio','2 → 1 → 0','C puede completar su espera si el medio continúa libre.']])}
+      </details>
       <p>El tiempo de espera no equivale siempre a «contador × ranura» de reloj continuo. Ese producto cuenta el tiempo de descuento libre; las pausas por otras transmisiones y los DIFS adicionales alargan el tiempo real.</p>
       <div id="simulador"></div>
       <h3>6. CSMA/CA frente a CSMA/CD</h3>

@@ -7,7 +7,7 @@ let selections = {};
 function element() {
   const children = new Map();
   return {
-    innerHTML: '', textContent: '', elements: {}, value: '',
+    innerHTML: '', textContent: '', elements: {}, value: '',style:{},
     attributes: {},setAttribute(name,value){this.attributes[name]=value;},
     insertAdjacentHTML(_position,html){this.innerHTML+=html;},
     addEventListener(event,handler){this['on'+event]=handler;},
@@ -120,6 +120,31 @@ assert.equal(get('result').textContent,''); // Mini quizzes must not alter final
 const popupEvents = {};
 context.document.body = element();
 context.document.addEventListener = (type,handler)=>{popupEvents[type]=handler;};
+const timers=new Map();let nextTimer=0;
+context.setTimeout=fn=>{timers.set(++nextTimer,fn);return nextTimer;};
+context.clearTimeout=id=>timers.delete(id);
+vm.runInContext(fs.readFileSync('backoff-animation.js','utf8'),context,{filename:'backoff-animation.js'});
+assert.match(get('backoff-stage').innerHTML,/PASO 1 DE 13/);
+for(let i=0;i<4;i++)get('backoff-next').onclick();
+assert.match(get('backoff-stage').innerHTML,/A llega a cero/);
+assert.match(get('backoff-stage').innerHTML,/Congelado/);
+for(let i=0;i<2;i++)get('backoff-next').onclick();
+assert.match(get('backoff-stage').innerHTML,/ACK para A/);
+assert.match(get('backoff-stage').innerHTML,/Congelado/);
+get('backoff-prev').onclick();
+assert.match(get('backoff-stage').innerHTML,/PASO 6 DE 13/);
+get('backoff-reset').onclick();
+get('backoff-play').onclick();assert.equal(timers.size,1);
+get('backoff-play').onclick();assert.equal(timers.size,0);
+get('backoff-play').onclick();
+let ticks=0;
+while(timers.size){assert.ok(++ticks<=13,'Playback must stop at the last step');const [id,fn]=timers.entries().next().value;timers.delete(id);fn();}
+assert.match(get('backoff-stage').innerHTML,/PASO 13 DE 13/);
+assert.equal(get('backoff-next').disabled,true);
+assert.equal(get('backoff-play').attributes['aria-pressed'],'false');
+get('backoff-play').onclick();assert.match(get('backoff-stage').innerHTML,/PASO 1 DE 13/);
+context.document.hidden=true;popupEvents.visibilitychange();assert.equal(timers.size,0);context.document.hidden=false;
+get('backoff-reset').onclick();assert.equal(get('backoff-progress').attributes['aria-valuenow'],'1');
 const dialog = get('term-dialog');
 dialog.open = false;
 dialog.showModal = ()=>{dialog.open=true;};
@@ -149,5 +174,5 @@ assert.equal(dialog.open,false);
 popupEvents.click(popupClick({target:{closest:()=>({getAttribute:()=> '#def-unknown'})}}));
 assert.equal(prevented,false);
 for(const match of html.matchAll(/(?:src|href)="([^"#]+\.(?:js|css))"/g)) assert.ok(fs.existsSync(match[1]),'Missing asset '+match[1]);
-for(const file of ['index.html','app.js','architecture.js','lessons.js','lab-scenes.js','mini-quizzes.js','glossary-dialog.js'])assert.doesNotMatch(fs.readFileSync(file,'utf8'),/capa\s*3|\bIP\b|router|encaminamiento/i);
-console.log('PASS: architecture exploration, chapters, glossary popup/dismissal/focus, assets, scope, final exam, 7 mini quizzes (21 questions), review links, laboratory navigation and scenes.');
+for(const file of ['index.html','app.js','architecture.js','lessons.js','lab-scenes.js','backoff-animation.js','mini-quizzes.js','glossary-dialog.js'])assert.doesNotMatch(fs.readFileSync(file,'utf8'),/capa\s*3|\bIP\b|router|encaminamiento/i);
+console.log('PASS: backoff animation/playback/pause/reset, architecture, chapters, glossary popup, assets, scope, final exam, mini quizzes, review links and laboratories.');
