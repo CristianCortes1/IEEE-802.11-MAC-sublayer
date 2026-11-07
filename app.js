@@ -117,3 +117,5 @@ document.getElementById('reset').onclick=()=>{quiz.reset();questions.forEach((_,
 const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.id))}})},{rootMargin:'-10% 0px -60% 0px'});document.querySelectorAll('#lessons section').forEach(s=>observer.observe(s));
 
 initializeArchitecture();
+
+initializeFrameLesson();

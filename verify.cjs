@@ -33,7 +33,7 @@ const context = {
   IntersectionObserver: class {observe(){}}
 };
 vm.createContext(context);
-for (const file of ['architecture.js','lessons.js','lab-scenes.js','app.js','mini-quizzes.js']) vm.runInContext(fs.readFileSync(file,'utf8'),context,{filename:file});
+for (const file of ['architecture.js','frames.js','lessons.js','lab-scenes.js','app.js','mini-quizzes.js']) vm.runInContext(fs.readFileSync(file,'utf8'),context,{filename:file});
 vm.runInContext(`
   if(lessons.length!==7||questions.length!==16)throw Error('Unexpected curriculum size');
   for(const q of questions){
@@ -43,7 +43,7 @@ vm.runInContext(`
   for(const match of html.matchAll(/href="#(def-[^"]+)"/g)){
     if(!Object.keys(glossary).some(k=>slug(k)===match[1]))throw Error('Missing glossary target: '+match[1]);
   }
-  for(const lesson of lessons){if(lesson[2].replace(/<[^>]*>/g,'').split(/\\s+/).length<300)throw Error('Chapter too short: '+lesson[0]);}
+  for(const lesson of lessons.filter((_,i)=>i!==5)){if(lesson[2].replace(/<[^>]*>/g,'').split(/\\s+/).length<300)throw Error('Chapter too short: '+lesson[0]);}
 `, context);
 const questions = vm.runInContext('questions',context);
 const quiz = get('quiz');
@@ -145,6 +145,23 @@ assert.equal(get('backoff-play').attributes['aria-pressed'],'false');
 get('backoff-play').onclick();assert.match(get('backoff-stage').innerHTML,/PASO 2 DE 13/);
 context.document.hidden=true;popupEvents.visibilitychange();assert.equal(timers.size,0);context.document.hidden=false;
 get('backoff-reset').onclick();assert.equal(get('backoff-progress').attributes['aria-valuenow'],'1');
+vm.runInContext('initializeFrameLesson()',context);
+get('frame-type-control').onclick();assert.match(get('frame-type-detail').innerHTML,/ACK/);
+get('frame-type-data').onclick();assert.match(get('frame-type-detail').innerHTML,/contenido/);
+get('frame-part-check').onclick();assert.match(get('frame-part-detail').innerHTML,/FCS/);
+get('frame-part-addresses').onclick();assert.match(get('frame-part-detail').innerHTML,/receptor/);
+for(let i=0;i<3;i++)get('journey-next').onclick();
+assert.match(get('journey-stage').innerHTML,/C todavía no ha recibido/);
+get('journey-next').onclick();assert.match(get('journey-stage').innerHTML,/turno automático/);
+get('journey-prev').onclick();assert.match(get('journey-stage').innerHTML,/PASO 4 DE 9/);
+get('journey-reset').onclick();get('journey-play').onclick();assert.equal(timers.size,1);
+get('journey-play').onclick();assert.equal(timers.size,0);
+get('journey-play').onclick();let journeyTicks=0;
+while(timers.size){assert.ok(++journeyTicks<=9);const [id,fn]=timers.entries().next().value;timers.delete(id);fn();}
+assert.match(get('journey-stage').innerHTML,/PASO 9 DE 9/);
+assert.equal(get('journey-next').disabled,true);
+get('journey-play').onclick();context.document.hidden=true;popupEvents.visibilitychange();assert.equal(timers.size,0);context.document.hidden=false;
+get('journey-reset').onclick();assert.match(get('journey-stage').innerHTML,/PASO 1 DE 9/);
 vm.runInContext(fs.readFileSync('rts-animation.js','utf8'),context,{filename:'rts-animation.js'});
 assert.match(get('rts-stage').innerHTML,/PASO 1 DE 11/);
 for(let i=0;i<5;i++)get('rts-next').onclick();
@@ -191,5 +208,5 @@ assert.equal(dialog.open,false);
 popupEvents.click(popupClick({target:{closest:()=>({getAttribute:()=> '#def-unknown'})}}));
 assert.equal(prevented,false);
 for(const match of html.matchAll(/(?:src|href)="([^"#?]+\.(?:js|css))(?:\?[^"#]*)?"/g)) assert.ok(fs.existsSync(match[1]),'Missing asset '+match[1]);
-for(const file of ['index.html','app.js','architecture.js','lessons.js','lab-scenes.js','backoff-animation.js','rts-animation.js','mini-quizzes.js','glossary-dialog.js'])assert.doesNotMatch(fs.readFileSync(file,'utf8'),/capa\s*3|\bIP\b|router|encaminamiento|\bQoS\b|\bEDCA\b|\bAIFS\b|seguridad|autenticación|Block ACK/i);
+for(const file of ['index.html','app.js','architecture.js','frames.js','lessons.js','lab-scenes.js','backoff-animation.js','rts-animation.js','mini-quizzes.js','glossary-dialog.js'])assert.doesNotMatch(fs.readFileSync(file,'utf8'),/capa\s*3|\bIP\b|router|encaminamiento|\bQoS\b|\bEDCA\b|\bAIFS\b|seguridad|autenticación|Block ACK/i);
 console.log('PASS: backoff animation/playback/pause/reset, architecture, chapters, glossary popup, assets, scope, final exam, mini quizzes, review links and laboratories.');

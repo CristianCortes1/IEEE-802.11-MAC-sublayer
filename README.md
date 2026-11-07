@@ -16,6 +16,7 @@ Página educativa en español para estudiar IEEE 802.11 y la capa de enlace de d
 - Arquitectura visual: mapa SVG explorable de dos BSS, diagrama de las subcapas LLC/MAC y desglose gráfico de SSID, BSSID y dirección MAC.
 - Ejemplo A=3/C=5 animado en 13 pasos: reproducir/pausar, anterior, siguiente y reiniciar; contadores, congelación y envíos DATOS/ACK visibles. La animación se pausa al ocultar la pestaña y respeta la preferencia de movimiento reducido.
 - RTS/CTS animado en 11 pasos: riesgo del nodo oculto, acceso inicial, solicitud, respuesta del AP escuchada por C, reserva NAV y secuencia DATOS/ACK. Incluye reproducción, pausa, velocidades y navegación manual.
+- Tramas: tarjetas de clases, un sobre explorable por partes y una animación de nueve etapas de A al AP y del AP a C. Los detalles de campos y direcciones quedan en desplegables.
 - Parcial de 16 ejercicios con selección de una, dos o tres respuestas y asociaciones mediante listas desplegables.
 - Calificación, explicación y enlaces a las secciones que deben repasarse.
 - Diseño adaptable a móviles y navegación con teclado.
@@ -25,7 +26,7 @@ Página educativa en español para estudiar IEEE 802.11 y la capa de enlace de d
 
 Abre `index.html` en un navegador. No necesita instalación ni compilación. También puedes servir esta carpeta con cualquier servidor de archivos estáticos.
 
-Los archivos `style.css`, `app.js`, `architecture.js`, `lessons.js`, `lab-scenes.js`, `backoff-animation.js`, `rts-animation.js`, `mini-quizzes.js`, `glossary-dialog.js` y `theme.js` deben mantenerse junto a `index.html`. Las fuentes de Google Fonts requieren conexión; si no está disponible, se usan fuentes alternativas del sistema. El contenido y los ejercicios se ejecutan localmente en el navegador.
+Los archivos `style.css`, `app.js`, `architecture.js`, `frames.js`, `lessons.js`, `lab-scenes.js`, `backoff-animation.js`, `rts-animation.js`, `mini-quizzes.js`, `glossary-dialog.js` y `theme.js` deben mantenerse junto a `index.html`. Las fuentes de Google Fonts requieren conexión; si no está disponible, se usan fuentes alternativas del sistema. El contenido y los ejercicios se ejecutan localmente en el navegador.
 
 ## Alcance
 
