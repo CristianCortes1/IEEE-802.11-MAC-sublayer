@@ -11,7 +11,7 @@ function element() {
     insertAdjacentHTML(_position,html){this.innerHTML+=html;},
     addEventListener(event,handler){this['on'+event]=handler;},
     querySelector(selector) {
-      if (!children.has(selector)) children.set(selector, {focus(){}});
+      if (!children.has(selector)) children.set(selector, {focus(){},addEventListener(event,handler){this['on'+event]=handler;}});
       return children.get(selector);
     },
     querySelectorAll(selector) {
@@ -104,6 +104,38 @@ for(const [index,items] of miniQuizzes.entries()){
   assert.equal(get(`${prefix}-feedback0`).innerHTML,'');
 }
 assert.equal(get('result').textContent,''); // Mini quizzes must not alter final exam results.
+// Definition popup: click interception, correct content, dismissal and focus return.
+const popupEvents = {};
+context.document.body = element();
+context.document.addEventListener = (type,handler)=>{popupEvents[type]=handler;};
+const dialog = get('term-dialog');
+dialog.open = false;
+dialog.showModal = ()=>{dialog.open=true;};
+dialog.close = ()=>{dialog.open=false;dialog.onclose();};
+dialog.getBoundingClientRect = ()=>({left:100,right:500,top:100,bottom:400});
+vm.runInContext(fs.readFileSync('glossary-dialog.js','utf8'),context,{filename:'glossary-dialog.js'});
+let prevented = false, focusOptions;
+const link={isConnected:true,getAttribute:()=> '#def-ap',focus:options=>{focusOptions=options;}};
+const popupClick=(options={})=>({target:{closest:()=>link},button:0,preventDefault(){prevented=true;},...options});
+popupEvents.click(popupClick());
+assert.equal(prevented,true);
+assert.equal(dialog.open,true);
+assert.equal(get('term-dialog-title').textContent,'AP');
+assert.match(get('term-dialog-definition').textContent,/Access Point/);
+dialog.onclick({target:dialog,clientX:200,clientY:200});
+assert.equal(dialog.open,true); // Clicking inside must not dismiss the popup.
+dialog.querySelector('button').onclick();
+assert.equal(dialog.open,false);
+assert.equal(focusOptions.preventScroll,true);
+popupEvents.click(popupClick());
+dialog.onclick({target:dialog,clientX:20,clientY:20});
+assert.equal(dialog.open,false);
+prevented=false;
+popupEvents.click(popupClick({ctrlKey:true}));
+assert.equal(prevented,false);
+assert.equal(dialog.open,false);
+popupEvents.click(popupClick({target:{closest:()=>({getAttribute:()=> '#def-unknown'})}}));
+assert.equal(prevented,false);
 for(const match of html.matchAll(/(?:src|href)="([^"#]+\.(?:js|css))"/g)) assert.ok(fs.existsSync(match[1]),'Missing asset '+match[1]);
-for(const file of ['index.html','app.js','lessons.js','lab-scenes.js','mini-quizzes.js'])assert.doesNotMatch(fs.readFileSync(file,'utf8'),/capa\s*3|\bIP\b|router|encaminamiento/i);
-console.log('PASS: chapters, glossary, assets, scope, final exam, 7 mini quizzes (21 questions), review links, laboratory navigation and scenes.');
+for(const file of ['index.html','app.js','lessons.js','lab-scenes.js','mini-quizzes.js','glossary-dialog.js'])assert.doesNotMatch(fs.readFileSync(file,'utf8'),/capa\s*3|\bIP\b|router|encaminamiento/i);
+console.log('PASS: chapters, glossary popup/dismissal/focus, assets, scope, final exam, 7 mini quizzes (21 questions), review links, laboratory navigation and scenes.');

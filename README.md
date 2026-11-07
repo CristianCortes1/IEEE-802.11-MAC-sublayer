@@ -10,7 +10,7 @@ Página educativa en español para estudiar IEEE 802.11 y la capa de enlace de d
 
 - Siete capítulos: introducción, arquitectura y MAC, CSMA/CA, RTS/CTS, ACK y errores, tramas y conclusiones.
 - Explicaciones detalladas desde cero, ejemplos numéricos resueltos y preguntas de comprensión con respuestas desplegables, centrados en la capa de enlace.
-- Glosario enlazado con regreso a la lectura.
+- Términos enlazados con definiciones en una ventana emergente, sin saltos de lectura; cierre con botón, Escape o clic fuera. El glosario completo conserva su buscador.
 - Mini cuestionario al final de cada uno de los siete temas: 3 preguntas, corrección con explicaciones, enlace de repaso y nuevos intentos independientes del parcial final.
 - Diagramas y tres laboratorios interactivos paso a paso, con estados visuales de las estaciones en cada etapa.
 - Parcial de 16 ejercicios con selección de una, dos o tres respuestas y asociaciones mediante listas desplegables.
@@ -22,7 +22,7 @@ Página educativa en español para estudiar IEEE 802.11 y la capa de enlace de d
 
 Abre `index.html` en un navegador. No necesita instalación ni compilación. También puedes servir esta carpeta con cualquier servidor de archivos estáticos.
 
-Los archivos `style.css`, `app.js`, `lessons.js`, `lab-scenes.js`, `mini-quizzes.js` y `theme.js` deben mantenerse junto a `index.html`. Las fuentes de Google Fonts requieren conexión; si no está disponible, se usan fuentes alternativas del sistema. El contenido y los ejercicios se ejecutan localmente en el navegador.
+Los archivos `style.css`, `app.js`, `lessons.js`, `lab-scenes.js`, `mini-quizzes.js`, `glossary-dialog.js` y `theme.js` deben mantenerse junto a `index.html`. Las fuentes de Google Fonts requieren conexión; si no está disponible, se usan fuentes alternativas del sistema. El contenido y los ejercicios se ejecutan localmente en el navegador.
 
 ## Alcance
 
