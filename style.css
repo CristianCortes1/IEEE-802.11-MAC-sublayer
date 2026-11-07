@@ -1,4 +1,34 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+.architecture-figure{margin:30px 0;padding:26px;border:1px solid var(--line);border-radius:16px;background:var(--bg)}
+.architecture-figure figcaption h3{margin:10px 0 14px}.architecture-figure p{font-size:14px}.architecture-figure code{overflow-wrap:anywhere}
+.diagram-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin-top:22px}
+.diagram-scroll svg{display:block;width:100%;min-width:700px;font-family:'DM Sans',sans-serif}
+.svg-label{fill:var(--ink);font-size:16px;font-weight:600;text-anchor:middle}
+.svg-note{fill:var(--muted);font-size:14px;text-anchor:middle}
+.bss-zone{fill:var(--teal);fill-opacity:.07;stroke:var(--teal);stroke-width:2;stroke-dasharray:7 5}
+.wired{fill:none;stroke:var(--ink);stroke-width:3}.wireless{fill:none;stroke:var(--teal);stroke-width:2.5;stroke-dasharray:6 5}
+.distribution-fill,.device-fill{fill:var(--bg);stroke:var(--ink);stroke-width:2}
+.ap-fill{fill:var(--teal);stroke:var(--ink);stroke-width:2}.device-line{fill:none;stroke:var(--ink);stroke-width:2}.led{fill:var(--green)}
+#architecture-map .bss-zone{stroke-opacity:.35}
+#architecture-map[data-focus=bss1] .bss1 .bss-zone,#architecture-map[data-focus=bss2] .bss2 .bss-zone{stroke-opacity:1;stroke-width:3;fill-opacity:.14}
+#architecture-map[data-focus=distribution] .wired{stroke:var(--teal);stroke-width:5}
+#architecture-map[data-focus=distribution] .distribution-fill{stroke:var(--teal);stroke-width:3}
+.architecture-controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.architecture-controls button[aria-pressed=true]{background:var(--teal);color:#fff;border-color:var(--teal)}
+html[data-theme=dark] .architecture-controls button[aria-pressed=true]{background:var(--teal);color:#142b38}
+.architecture-detail{border-left:3px solid var(--teal);padding:16px 20px;margin-top:18px;background:var(--bg);min-height:150px}
+.architecture-detail p{margin-bottom:0}.diagram-mobile-hint{color:var(--muted);font-size:12px!important}
+.layer-diagram{max-width:650px;margin:24px auto}.layer-bracket{border:2px solid var(--teal);border-radius:14px;padding:20px;font-size:11px;letter-spacing:1px;color:var(--teal);font-weight:700}
+.layer-block{display:flex;gap:18px;padding:20px;border:1px solid var(--line);border-radius:10px;color:var(--ink);letter-spacing:0;font-weight:400}
+.llc-block{margin-top:15px}.mac-block{border-color:var(--teal);background:color-mix(in srgb,var(--teal) 7%,var(--bg))}
+.layer-symbol{display:grid;place-items:center;min-width:42px;height:42px;border:1px solid var(--line);border-radius:10px;color:var(--teal);font:600 18px 'Space Grotesk',sans-serif}
+.layer-block strong{font-size:16px}.layer-block p{margin:8px 0;font-size:14px}.layer-block span:not(.layer-symbol){font-size:12px;color:var(--muted)}
+.layer-arrow{text-align:center;color:var(--teal);font-size:24px;padding:6px}.phy-block{border-style:dashed}
+.identity-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:22px 0}.identity-card{padding:20px 16px;border:1px solid var(--line);border-radius:12px}
+.identity-icon{display:block;font:600 30px 'Space Grotesk',sans-serif;color:var(--teal)}.identity-card h4{font-size:16px;margin:10px 0}.identity-card p{margin:8px 0}.identity-card code{font-size:12px}.identity-card small{display:block;font-size:12px;color:var(--muted);margin-top:12px}
+.mac-bytes{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding-top:18px}.mac-bytes>div{text-align:center}.mac-bytes code{display:block;border:1px solid var(--teal);border-radius:8px;padding:10px 15px;font-size:22px;color:var(--teal)}.mac-bytes span{font-size:11px;color:var(--muted)}.mac-equation{text-align:center;font-weight:600}
+@media(max-width:1050px){.identity-grid{grid-template-columns:1fr}.identity-card{display:block}}
+@media(max-width:700px){.architecture-figure{padding:18px 14px;margin:24px 0}.layer-bracket{padding:14px}.layer-block{padding:15px;gap:12px}.layer-symbol{min-width:32px;height:32px;font-size:15px}.architecture-controls button{flex-grow:1}.architecture-detail{min-height:0;padding:15px}.mac-bytes code{padding:7px 10px;font-size:18px}}
 .term-dialog{width:min(480px,calc(100% - 32px));max-height:calc(100dvh - 48px);padding:26px;border:1px solid var(--line);border-radius:16px;background:var(--bg);color:var(--ink);box-shadow:0 24px 90px #0005;overflow-y:auto;overscroll-behavior:contain}
 .term-dialog::backdrop{background:#07151db3}
 .term-dialog-top{display:flex;align-items:center;justify-content:space-between;gap:16px}

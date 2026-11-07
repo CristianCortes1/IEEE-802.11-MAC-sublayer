@@ -8,6 +8,7 @@ function element() {
   const children = new Map();
   return {
     innerHTML: '', textContent: '', elements: {}, value: '',
+    attributes: {},setAttribute(name,value){this.attributes[name]=value;},
     insertAdjacentHTML(_position,html){this.innerHTML+=html;},
     addEventListener(event,handler){this['on'+event]=handler;},
     querySelector(selector) {
@@ -32,7 +33,7 @@ const context = {
   IntersectionObserver: class {observe(){}}
 };
 vm.createContext(context);
-for (const file of ['lessons.js','lab-scenes.js','app.js','mini-quizzes.js']) vm.runInContext(fs.readFileSync(file,'utf8'),context,{filename:file});
+for (const file of ['architecture.js','lessons.js','lab-scenes.js','app.js','mini-quizzes.js']) vm.runInContext(fs.readFileSync(file,'utf8'),context,{filename:file});
 vm.runInContext(`
   if(lessons.length!==7||questions.length!==16)throw Error('Unexpected curriculum size');
   for(const q of questions){
@@ -71,6 +72,17 @@ for(const [id,count] of [['simulador',7],['hidden-lab',5],['retry-lab',5]]) {
   assert.match(lab.innerHTML,new RegExp('1 / '+count));
 }
 const html=fs.readFileSync('index.html','utf8');
+assert.match(get('lessons').innerHTML,/architecture-map-title/);
+assert.match(get('lessons').innerHTML,/layer-diagram/);
+assert.match(get('lessons').innerHTML,/mac-bytes/);
+assert.equal(get('architecture-map').attributes['data-focus'],'bss1');
+for(const key of ['bss2','distribution','bss1']){
+  get('arch-'+key).onclick();
+  assert.equal(get('architecture-map').attributes['data-focus'],key);
+  assert.equal(get('arch-'+key).attributes['aria-pressed'],'true');
+  for(const other of ['bss1','bss2','distribution'].filter(name=>name!==key))assert.equal(get('arch-'+other).attributes['aria-pressed'],'false');
+  assert.ok(get('architecture-detail').innerHTML.length>100);
+}
 const miniQuizzes=vm.runInContext('topicQuizzes',context);
 assert.equal(miniQuizzes.length,7);
 for(const [index,items] of miniQuizzes.entries()){
@@ -137,5 +149,5 @@ assert.equal(dialog.open,false);
 popupEvents.click(popupClick({target:{closest:()=>({getAttribute:()=> '#def-unknown'})}}));
 assert.equal(prevented,false);
 for(const match of html.matchAll(/(?:src|href)="([^"#]+\.(?:js|css))"/g)) assert.ok(fs.existsSync(match[1]),'Missing asset '+match[1]);
-for(const file of ['index.html','app.js','lessons.js','lab-scenes.js','mini-quizzes.js','glossary-dialog.js'])assert.doesNotMatch(fs.readFileSync(file,'utf8'),/capa\s*3|\bIP\b|router|encaminamiento/i);
-console.log('PASS: chapters, glossary popup/dismissal/focus, assets, scope, final exam, 7 mini quizzes (21 questions), review links, laboratory navigation and scenes.');
+for(const file of ['index.html','app.js','architecture.js','lessons.js','lab-scenes.js','mini-quizzes.js','glossary-dialog.js'])assert.doesNotMatch(fs.readFileSync(file,'utf8'),/capa\s*3|\bIP\b|router|encaminamiento/i);
+console.log('PASS: architecture exploration, chapters, glossary popup/dismissal/focus, assets, scope, final exam, 7 mini quizzes (21 questions), review links, laboratory navigation and scenes.');

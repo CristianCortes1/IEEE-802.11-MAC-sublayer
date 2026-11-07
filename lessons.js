@@ -1,4 +1,5 @@
 function buildLessons(t, slug) {
+  const architecture = architectureDiagrams(t);
   const check = (question, answer) => `<details class="self-check"><summary>Comprueba si lo entendiste: ${question}</summary><p>${answer}</p></details>`;
   const table = (headers, rows) => `<div class="table-wrap"><table><thead><tr>${headers.map(h=>`<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   return [
@@ -24,10 +25,11 @@ function buildLessons(t, slug) {
       <h3>1. Estación, AP y conjunto de servicio</h3>
       <p>Una ${t('estación')} es un dispositivo con funciones MAC y PHY de 802.11. Tu portátil es una estación. Un ${t('AP')} —Access Point o punto de acceso— también es una estación, pero cumple una función especial: permite que otras estaciones se asocien a él y comunica ese conjunto con el ${t('sistema de distribución')}.</p>
       <p>En el ${t('modo infraestructura')}, el AP y las estaciones asociadas forman un ${t('BSS')}, un conjunto básico de servicio. Para visualizarlo, imagina un aula con un AP y veinte portátiles. El AP no es dueño exclusivo del tiempo de radio: en el acceso distribuido que estudiaremos también tiene que competir cuando quiere iniciar una transmisión.</p>
-      <div class="flow"><span>Portátil A</span><i>⇄</i><span>AP · centro del BSS</span><i>⇄</i><span>Sistema de distribución</span></div>
+      ${architecture.topology}
       <p>El ${t('SSID')} es el nombre anunciado de la red, como «Aula». El ${t('BSSID')} identifica un BSS concreto. Dos AP pueden anunciar el mismo SSID y tener BSSID diferentes. Así, «veo el mismo nombre» no significa «estoy usando exactamente el mismo punto de acceso».</p>
       <h3>2. Por qué la capa de enlace se divide en LLC y MAC</h3>
       <p>Una ${t('subcapa')} es una división de tareas dentro de una capa. La división clásica IEEE 802 separa ${t('LLC')} —Logical Link Control, control de enlace lógico— y MAC —Medium Access Control, control de acceso al medio—. LLC proporciona una interfaz lógica para identificar y entregar el contenido transportado; MAC resuelve las particularidades de acceder al medio y manejar sus tramas.</p>
+      ${architecture.stack}
       ${table(['Pregunta','Responsabilidad principal'],[['¿Cómo se identifica el contenido para entregarlo a quien corresponde dentro del equipo?','LLC en la organización clásica del enlace.'],['¿Puedo transmitir ahora por este canal?','MAC.'],['¿Qué direcciones y qué tipo lleva la trama?','MAC.'],['¿La comprobación de la trama indica errores y debo confirmarla?','MAC.']])}
       <p>Piensa en una oficina de envíos: LLC se parece a la clasificación lógica del contenido; MAC se parece a preparar el sobre del enlace y decidir cuándo puede salir. La comparación ayuda a separar funciones, pero LLC no es una persona ni MAC una oficina real.</p>
       <h3>3. Las tareas de MAC, una por una</h3>
@@ -35,6 +37,7 @@ function buildLessons(t, slug) {
       <h3>4. Leer una dirección MAC</h3>
       <p>Una ${t('dirección MAC')} de 802.11 tiene 48 ${t('bit')}s. Como un ${t('byte')} contiene 8 bits, son 6 bytes. Se escribe normalmente en ${t('hexadecimal')}: <code>02:1A:2B:3C:4D:5E</code>. Cada grupo tiene dos cifras hexadecimales y representa un byte. Los dos puntos solo ayudan a leerla.</p>
       <p>Una dirección pertenece al contexto de una interfaz, no equivale a una identidad permanente de su propietario. Puede ser asignada localmente o cambiar por privacidad. Las direcciones permiten expresar envíos ${t('unicast')} a un destinatario, ${t('multicast')} a un grupo o ${t('broadcast')} a todos dentro del ámbito de difusión correspondiente.</p>
+      ${architecture.addresses}
       <h3>5. Por qué MAC no funciona igual en Ethernet y Wi-Fi</h3>
       ${table(['Aspecto',t('Ethernet'),t('Wi-Fi')],[['Medio habitual','Cable; un enlace conmutado puede ser exclusivo entre dos interfaces.','Radio; varias estaciones próximas pueden competir por el mismo canal.'],['Acceso','En Ethernet compartido antiguo y semidúplex se usa CSMA/CD. En enlaces conmutados de dúplex completo no.','El acceso distribuido usa CSMA/CA; existen mecanismos adicionales según versión.'],['Direcciones de la trama','Campos de origen y destino.','Hasta cuatro campos para representar distintas funciones del enlace.'],['Confirmación inmediata','No usa el intercambio de ACK MAC por trama propio de 802.11.','Muchos intercambios dirigidos requieren ACK o Block ACK.']])}
       <p>${t('semidúplex')} significa usar un medio por turnos para transmitir y recibir. ${t('dúplex completo')} permite ambas cosas simultáneamente en un enlace. En el canal inalámbrico del modelo clásico, las estaciones se turnan; tener un AP no elimina la necesidad de coordinarse.</p>
