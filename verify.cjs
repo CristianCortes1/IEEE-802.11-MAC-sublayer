@@ -23,7 +23,7 @@ function element() {
     scrollIntoView(){}
   };
 }
-function get(id) { if (!nodes.has(id)) nodes.set(id, element()); return nodes.get(id); }
+function get(id) { if (!nodes.has(id)) {const el=element();if(id==='quiz')for(let i=10;i<16;i++)el.elements['q'+i]={value:''};nodes.set(id,el);} return nodes.get(id); }
 const context = {
   console,
   document: {
@@ -52,12 +52,21 @@ get('grade').onclick();
 assert.match(get('result').textContent,/^0 \/ 16/);
 assert.match(get('feedback0').innerHTML,/Sin responder/);
 questions.forEach((q,i)=>{if(q.match)quiz.elements['q'+i].value=String(q.a[0]);else selections['q'+i]=[...q.a];});
+quiz.onchange();
+assert.equal(get('live-grade').textContent,'5.00 / 5.00');
+assert.equal(get('live-answered').textContent,'16 de 16 respondidas');
 get('grade').onclick();
 assert.match(get('result').textContent,/^16 \/ 16/);
 selections.q1.push(1); // An extra incorrect choice must invalidate the answer.
 get('grade').onclick();
 assert.match(get('result').textContent,/^15 \/ 16/);
+assert.equal(get('live-grade').textContent,'4.69 / 5.00');
 assert.match(get('feedback1').innerHTML,/href="#tema2"/);
+get('reset').onclick();
+assert.equal(get('live-grade').textContent,'0.00 / 5.00');
+assert.equal(get('live-answered').textContent,'0 de 16 respondidas');
+selections.q0=[1];quiz.onchange();assert.equal(get('live-grade').textContent,'0.31 / 5.00');
+selections.q0=[0];quiz.onchange();assert.equal(get('live-grade').textContent,'0.00 / 5.00');
 get('reset').onclick();
 assert.equal(get('result').textContent,'');
 for(const [id,count] of [['simulador',7],['retry-lab',5]]) {

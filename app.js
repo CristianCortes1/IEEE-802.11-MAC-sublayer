@@ -112,8 +112,27 @@ const questions=[
 {q:'¿Qué término corresponde a «clase de tramas que permite descubrir y mantener la red»?',o:['Data','Control','Management'],a:[2],s:6,e:'Management incluye beacon y tramas de asociación.',match:true}
 ];
 const quiz=document.getElementById('quiz');quiz.innerHTML=questions.map((q,i)=>`<div class="question"><fieldset><legend><span class="qmeta">EJERCICIO ${String(i+1).padStart(2,'0')} · ${q.match?'ASOCIACIÓN':q.a.length+' RESPUESTA'+(q.a.length>1?'S CORRECTAS':' CORRECTA')}</span>${q.q}</legend>${q.match?`<label for="q${i}" class="qmeta">Selecciona la correspondencia</label><select id="q${i}" name="q${i}"><option value="">Elige una opción…</option>${q.o.map((o,j)=>`<option value="${j}">${o}</option>`).join('')}</select>`:q.o.map((o,j)=>`<label class="option"><input type="${q.a.length===1?'radio':'checkbox'}" name="q${i}" value="${j}"><span>${o}</span></label>`).join('')}</fieldset><div id="feedback${i}"></div></div>`).join('');
-document.getElementById('grade').onclick=()=>{let score=0;questions.forEach((q,i)=>{const selected=q.match?(quiz.elements['q'+i].value===''?[]:[Number(quiz.elements['q'+i].value)]):Array.from(quiz.querySelectorAll(`input[name="q${i}"]:checked`)).map(x=>Number(x.value));const correct=selected.length===q.a.length&&selected.every(x=>q.a.includes(x));if(correct)score++;document.getElementById('feedback'+i).innerHTML=`<div class="feedback ${correct?'correct':'wrong'}">${correct?'✓ Correcto.':selected.length?'↗ Revisa esta respuesta.':'○ Sin responder.'} ${q.e}${correct?'':`<br>Respuesta correcta: ${q.a.map(x=>q.o[x]).join('; ')}.<a href="#tema${q.s}">Repasar: ${lessons[q.s-1][0]} →</a>`}</div>`});const r=document.getElementById('result');r.textContent=`${score} / ${questions.length} puntos · ${Math.round(score/questions.length*100)} % · Nota de práctica: ${(score/questions.length*5).toFixed(1)} / 5.0`;r.scrollIntoView({behavior:'smooth',block:'center'})};
-document.getElementById('reset').onclick=()=>{quiz.reset();questions.forEach((_,i)=>document.getElementById('feedback'+i).innerHTML='');document.getElementById('result').textContent='';quiz.scrollIntoView({behavior:'smooth'})};quiz.onsubmit=e=>e.preventDefault();
+function examSelection(q,i){
+  return q.match?(quiz.elements['q'+i].value===''?[]:[Number(quiz.elements['q'+i].value)]):Array.from(quiz.querySelectorAll(`input[name="q${i}"]:checked`)).map(x=>Number(x.value));
+}
+function examProgress(){
+  let answered=0,correct=0;
+  questions.forEach((q,i)=>{const selected=examSelection(q,i);if(selected.length)answered++;if(selected.length===q.a.length&&selected.every(value=>q.a.includes(value)))correct++;});
+  return {answered,correct,grade:correct/questions.length*5};
+}
+function updateLiveGrade(){
+  const progress=examProgress();
+  document.getElementById('live-grade').textContent=progress.grade.toFixed(2)+' / 5.00';
+  document.getElementById('live-answered').textContent=`${progress.answered} de ${questions.length} respondidas`;
+}
+quiz.addEventListener('change',()=>{
+  updateLiveGrade();
+  document.getElementById('result').textContent='';
+  questions.forEach((_,i)=>document.getElementById('feedback'+i).innerHTML='');
+});
+document.getElementById('grade').onclick=()=>{updateLiveGrade();let score=0;questions.forEach((q,i)=>{const selected=examSelection(q,i);const correct=selected.length===q.a.length&&selected.every(x=>q.a.includes(x));if(correct)score++;document.getElementById('feedback'+i).innerHTML=`<div class="feedback ${correct?'correct':'wrong'}">${correct?'✓ Correcto.':selected.length?'↗ Revisa esta respuesta.':'○ Sin responder.'} ${q.e}${correct?'':`<br>Respuesta correcta: ${q.a.map(x=>q.o[x]).join('; ')}.<a href="#tema${q.s}">Repasar: ${lessons[q.s-1][0]} →</a>`}</div>`});const r=document.getElementById('result');r.textContent=`${score} / ${questions.length} puntos · ${Math.round(score/questions.length*100)} % · Nota de práctica: ${(score/questions.length*5).toFixed(2)} / 5.0`;r.scrollIntoView({behavior:'smooth',block:'center'})};
+document.getElementById('reset').onclick=()=>{quiz.reset();updateLiveGrade();questions.forEach((_,i)=>document.getElementById('feedback'+i).innerHTML='');document.getElementById('result').textContent='';quiz.scrollIntoView({behavior:'smooth'})};quiz.onsubmit=e=>e.preventDefault();
+updateLiveGrade();
 const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.id))}})},{rootMargin:'-10% 0px -60% 0px'});document.querySelectorAll('#lessons section').forEach(s=>observer.observe(s));
 
 initializeArchitecture();
