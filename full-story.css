@@ -14,7 +14,7 @@ html[data-theme=dark] .story-player{--story-management:#8bd4ed;--story-control:#
 .story-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px;padding:8px 24px 24px;align-items:start}
 .story-visual{min-width:0}.story-frame-badge{font-size:11px;line-height:1.5;border:1px solid currentColor;border-radius:8px;padding:8px 10px;min-height:34px;overflow-wrap:anywhere}
 .story-management{color:var(--story-management);stroke:var(--story-management)}.story-control{color:var(--story-control);stroke:var(--story-control)}.story-data{color:var(--story-data);stroke:var(--story-data)}.story-problem{color:var(--story-problem);stroke:var(--story-problem)}.story-wait{color:var(--muted)}
-.story-map{display:block;width:100%;margin-top:10px;font-family:'DM Sans',sans-serif;overflow:visible}
+.story-map{display:block;width:100%;margin-top:10px;font-family:'DM Sans',sans-serif;overflow:hidden}
 .story-link{fill:none;stroke:var(--line);stroke-width:3;stroke-dasharray:7 7}
 .story-device{fill:var(--bg);stroke:var(--teal);stroke-width:3}.story-antenna{fill:none;stroke:var(--teal);stroke-width:3}
 .story-node-letter{fill:var(--ink);font:700 31px 'Space Grotesk',sans-serif;text-anchor:middle}
