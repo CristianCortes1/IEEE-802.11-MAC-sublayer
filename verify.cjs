@@ -33,11 +33,11 @@ const context = {
   IntersectionObserver: class {observe(){}}
 };
 vm.createContext(context);
-for (const file of ['architecture.js','frames.js','lessons.js','lab-scenes.js','app.js','mini-quizzes.js']) vm.runInContext(fs.readFileSync(file,'utf8'),context,{filename:file});
+for (const file of ['architecture.js','frames.js','authentication.js','lessons.js','lab-scenes.js','app.js','mini-quizzes.js']) vm.runInContext(fs.readFileSync(file,'utf8'),context,{filename:file});
 vm.runInContext(`
-  if(lessons.length!==7||questions.length!==16)throw Error('Unexpected curriculum size');
+  if(lessons.length!==8||questions.length!==16)throw Error('Unexpected curriculum size');
   for(const q of questions){
-    if(!q.a.length||q.a.some(i=>!q.o[i])||q.s<1||q.s>7)throw Error('Invalid quiz answer or review target');
+    if(!q.a.length||q.a.some(i=>!q.o[i])||q.s<1||q.s>lessons.length)throw Error('Invalid quiz answer or review target');
   }
   const html=document.querySelector('#lessons').innerHTML;
   for(const match of html.matchAll(/href="#(def-[^"]+)"/g)){
@@ -107,7 +107,9 @@ assert.match(get('lessons').innerHTML,/ess-boundary/);
 assert.equal(vm.runInContext('Object.hasOwn(glossary,"ESS")',context),true);
 assert.ok(questions.some(q=>q.q.includes('ESS')&&q.s===2));
 const miniQuizzes=vm.runInContext('topicQuizzes',context);
-assert.equal(miniQuizzes.length,7);
+assert.equal(miniQuizzes.length,8);
+assert.match(get('lessons').innerHTML,/id="autenticacion"/);
+assert.match(get('nav').innerHTML,/#tema7[\s\S]*Autenticación y asociación/);
 for(const [index,items] of miniQuizzes.entries()){
   const topic=index+1, prefix=`mini-${topic}`, form=get(prefix), result=get(`${prefix}-result`);
   assert.equal(items.length,3);
@@ -256,6 +258,58 @@ context.document.hidden=true;popupEvents.visibilitychange();assert.equal(timers.
 get('story-play').onclick();popupEvents.click({target:{closest:()=>({})}});assert.equal(timers.size,0);
 get('story-reset').onclick();assert.equal(get('story-prev').disabled,true);
 assert.doesNotMatch(fs.readFileSync('full-story.js','utf8'),/capa\s*3|\bIP\b|router|\bQoS\b|\bEDCA\b|\bAIFS\b|Block ACK/i);
+// Acknowledging a request must not advance the authentication / association state.
+const authSteps=vm.runInContext('authenticationSteps()',context);
+assert.equal(authSteps.length,17);
+const authStep=id=>authSteps.find(s=>s.id===id);
+assert.equal(authStep('discover').state.authenticated,false);
+assert.equal(authStep('auth-request-ack').state.authenticated,false);
+assert.equal(authStep('auth-response').state.authenticated,true);
+assert.equal(authStep('auth-response').state.associated,false);
+assert.equal(authStep('association-request-ack').state.associated,false);
+assert.equal(authStep('association-response').state.associated,true);
+assert.equal(authStep('association-response').state.aid,7);
+assert.equal(authSteps.filter(s=>s.kind==='management'&&s.id!=='beacon').length,4);
+assert.equal(authSteps.filter(s=>s.frame==='ACK'&&s.id!=='data-ack').length,4);
+for(const rejected of ['auth-rejected','association-rejected']){
+  const branch=vm.runInContext(`authenticationSteps('${rejected}')`,context),last=branch.at(-1);
+  assert.equal(last.state.authenticated,rejected==='association-rejected');
+  assert.equal(last.state.associated,false);
+  assert.equal(last.state.aid,null);
+  assert.ok(branch.every(s=>s.kind!=='data'));
+  assert.ok(branch.filter(s=>s.kind==='control').every(s=>s.phase.includes('SIFS')));
+}
+vm.runInContext('initializeAuthenticationLesson()',context);
+get('auth-play').onclick();assert.equal(timers.size,1);
+get('auth-speed').onchange();assert.equal(timers.size,1);
+let authTicks=0;
+while(timers.size){assert.ok(++authTicks<=17,'Authentication playback must terminate');const[id,fn]=timers.entries().next().value;timers.delete(id);fn();}
+assert.equal(get('authentication-player').attributes['data-state'],'3');
+assert.equal(get('auth-play').attributes['aria-pressed'],'false');
+assert.equal(get('auth-next').disabled,true);
+get('auth-prev').onclick();
+get('auth-reset').onclick();
+assert.equal(get('authentication-player').attributes['data-state'],'1');
+assert.match(get('auth-stage').innerHTML,/sin asignar/);
+get('auth-play').onclick();
+context.document.hidden=true;popupEvents.visibilitychange();assert.equal(timers.size,0);context.document.hidden=false;
+for(const scenario of ['auth-rejected','association-rejected']){
+  get('auth-scenario').value=scenario;get('auth-scenario').onchange();
+  assert.equal(get('auth-progress').value,1);
+  const count=vm.runInContext(`authenticationSteps('${scenario}').length`,context);
+  for(let i=1;i<count;i++)get('auth-next').onclick();
+  assert.equal(get('authentication-player').attributes['data-state'],scenario==='auth-rejected'?'1':'2');
+  assert.equal(get('auth-next').disabled,true);
+  get('auth-reset').onclick();assert.equal(get('authentication-player').attributes['data-state'],'1');
+}
+get('auth-scenario').value='success';get('auth-scenario').onchange();
+get('auth-play').onclick();
+const[,authTick]=timers.entries().next().value;timers.clear();authTick();
+get('auth-scenario').value='auth-rejected';get('auth-scenario').onchange();
+assert.equal(timers.size,0);
+assert.equal(get('auth-progress').value,1);
+assert.equal(get('auth-play').attributes['aria-pressed'],'false');
+get('auth-scenario').value='success';get('auth-scenario').onchange();
 const dialog = get('term-dialog');
 dialog.open = false;
 dialog.showModal = ()=>{dialog.open=true;};
@@ -285,5 +339,6 @@ assert.equal(dialog.open,false);
 popupEvents.click(popupClick({target:{closest:()=>({getAttribute:()=> '#def-unknown'})}}));
 assert.equal(prevented,false);
 for(const match of html.matchAll(/(?:src|href)="([^"#?]+\.(?:js|css))(?:\?[^"#]*)?"/g)) assert.ok(fs.existsSync(match[1]),'Missing asset '+match[1]);
-for(const file of ['index.html','app.js','architecture.js','frames.js','lessons.js','lab-scenes.js','backoff-animation.js','rts-animation.js','mini-quizzes.js','glossary-dialog.js'])assert.doesNotMatch(fs.readFileSync(file,'utf8'),/capa\s*3|\bIP\b|router|encaminamiento|\bQoS\b|\bEDCA\b|\bAIFS\b|seguridad|autenticación|Block ACK/i);
-console.log('PASS: complete Wi-Fi story/state restoration/playback, backoff, architecture, chapters, glossary popup, assets, scope, final exam, mini quizzes and laboratories.');
+// Basic 802.11 authentication is now an explicitly requested layer-2 topic.
+for(const file of ['index.html','app.js','architecture.js','frames.js','authentication.js','lessons.js','lab-scenes.js','backoff-animation.js','rts-animation.js','mini-quizzes.js','glossary-dialog.js'])assert.doesNotMatch(fs.readFileSync(file,'utf8'),/capa\s*3|\bIP\b|router|encaminamiento|\bQoS\b|\bEDCA\b|\bAIFS\b|seguridad|Block ACK/i);
+console.log('PASS: authentication/association state transitions, rejection branches, playback/restore, complete Wi-Fi story, backoff, architecture, eight chapters, glossary popup, assets, scope, final exam, mini quizzes and laboratories.');

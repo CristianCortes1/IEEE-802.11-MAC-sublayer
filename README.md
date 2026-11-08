@@ -8,15 +8,16 @@ Página educativa en español para estudiar IEEE 802.11 y la capa de enlace de d
 
 ## Contenido
 
-- Siete capítulos: introducción, arquitectura y MAC, CSMA/CA, RTS/CTS, ACK y errores, tramas y conclusiones.
+- Ocho capítulos: introducción, arquitectura y MAC, CSMA/CA, RTS/CTS, ACK y errores, tramas, autenticación y asociación, y conclusiones.
 - Explicaciones detalladas desde cero, ejemplos numéricos resueltos y preguntas de comprensión con respuestas desplegables, centrados en la capa de enlace.
 - Términos enlazados con definiciones en una ventana emergente, sin saltos de lectura; cierre con botón, Escape o clic fuera. El glosario completo conserva su buscador.
-- Mini cuestionario al final de cada uno de los siete temas: 3 preguntas, corrección con explicaciones, enlace de repaso y nuevos intentos independientes del parcial final.
+- Mini cuestionario al final de cada uno de los ocho temas: 3 preguntas, corrección con explicaciones, enlace de repaso y nuevos intentos independientes del parcial final.
 - Diagramas y tres laboratorios interactivos paso a paso, con estados visuales de las estaciones en cada etapa.
 - Arquitectura visual: STA/AP → BSS → sistema de distribución (DS) → ESS → SSID/BSSID. El mapa SVG permite explorar cada BSS, su conexión y el ESS completo; incluye preguntas de repaso y una definición enlazada de ESS.
 - Ejemplo A=3/C=5 animado en 13 pasos: reproducir/pausar, anterior, siguiente y reiniciar; contadores, congelación y envíos DATOS/ACK visibles. La animación se pausa al ocultar la pestaña y respeta la preferencia de movimiento reducido.
 - RTS/CTS animado en 11 pasos: riesgo del nodo oculto, acceso inicial, solicitud, respuesta del AP escuchada por C, reserva NAV y secuencia DATOS/ACK. Incluye reproducción, pausa, velocidades y navegación manual.
 - Tramas: tarjetas de clases, un sobre explorable por partes y una animación de nueve etapas de A al AP y del AP a C. Los detalles de campos y direcciones quedan en desplegables.
+- Autenticación y asociación: explicación detallada de descubrimiento, beacons, sondeos, Open System, los tres estados de la estación, solicitudes y respuestas, códigos de estado, AID y diferencia entre un ACK y la aceptación. Incluye diagrama de estados y un reproductor de 17 pasos con conexión correcta y casos de rechazo de autenticación o asociación. Los nuevos términos también abren el glosario emergente.
 - Historia completa en siete capítulos: beacons, llegada y conexión de A, primer envío, llegada y conexión de C, nodo oculto, colisión, reintentos y reserva RTS/CTS en ambos sentidos. Incluye Open System básico, asociación/AID, ACK de gestión, FCS y NAV; reproducción, velocidad, capítulos y barra para ir a cualquier paso.
 - Parcial de 16 ejercicios con selección de una, dos o tres respuestas y asociaciones mediante listas desplegables.
 - Calificación, explicación y enlaces a las secciones que deben repasarse.
@@ -32,11 +33,13 @@ Los archivos `style.css`, `app.js`, `architecture.js`, `frames.js`, `lessons.js`
 
 La historia completa usa también `full-story.js` y `full-story.css`, en la misma carpeta. Se accede desde «Historia completa» o con `#historia-completa` en la URL.
 
+El capítulo de conexión usa `authentication.js` y `authentication.css`. Se abre desde «Autenticación y asociación» o con `#autenticacion` en la URL. El reproductor reconstruye el estado al retroceder, se pausa al ocultar la pestaña o abrir una definición y respeta la preferencia de movimiento reducido.
+
 ## Alcance
 
 La guía se centra en fundamentos de las capas 1 y 2: señales, medio compartido, estaciones y AP, subcapas LLC/MAC, tramas, DCF, CSMA/CA, RTS/CTS, NAV, FCS y ACK. Los ejemplos de acceso al canal usan DCF clásico con tiempos ilustrativos. Las fuentes oficiales de consulta están enlazadas al final de la página.
 
-La historia añade solo el intercambio básico Open System previo a la asociación. Los eventos se han elegido con fines didácticos: no es un simulador de propagación ni de todos los resultados posibles de la contención. Los tiempos de reproducción y el NAV por etapas no están a escala. El estado se reconstruye al retroceder o saltar de capítulo.
+El capítulo de conexión y la historia explican el intercambio básico Open System previo a la asociación. Ese procedimiento no comprueba una contraseña ni representa todos los métodos y configuraciones posibles. Los eventos se han elegido con fines didácticos: no es un simulador de propagación ni de todos los resultados posibles de la contención. Los tiempos de reproducción y el NAV por etapas no están a escala. El estado se reconstruye al retroceder o saltar de capítulo.
 
 ## Verificación
 

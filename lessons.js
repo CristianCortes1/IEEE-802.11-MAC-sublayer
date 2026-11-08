@@ -126,6 +126,7 @@ function buildLessons(t, slug) {
       ${check('¿Cuál es la diferencia entre FCS y ACK?', 'FCS es un campo que permite al receptor comprobar errores en una trama. ACK es una trama de respuesta que informa al emisor de una recepción correcta cuando corresponde. Verificar y comunicar el resultado son tareas diferentes.')}
     `],
     ['Tramas 802.11','Abre una trama y sigue su viaje.',frameLesson(t,slug)],
+    ['Autenticación y asociación','De ver la red a formar parte de ella.',authenticationLesson(t)],
     ['Conclusiones','Unir las piezas sin confundir funciones.',`
       <p class="intro">Comprender 802.11 MAC consiste en seguir una decisión tras otra: qué trama preparo, cuándo puedo enviarla, cómo sabe el receptor que es para él y cómo detecto si el intento funcionó.</p>
       <h3>1. La cadena de decisiones de una entrega</h3>

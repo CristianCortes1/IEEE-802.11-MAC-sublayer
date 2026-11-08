@@ -69,6 +69,7 @@ const glossary={
 'dúplex completo':['Comunicación que permite transmitir y recibir simultáneamente en un enlace.'],
 'sobrecarga':['Tiempo o información adicional necesarios para coordinar una comunicación, aparte de los datos útiles.']};
 Object.assign(glossary, {"enlace": ["Relación de comunicación entre interfaces que permite intercambiar tramas; por ejemplo, el salto de radio de un portátil a un AP."], "modo infraestructura": ["Organización de una red 802.11 en la que las estaciones se asocian a un punto de acceso que proporciona acceso al sistema de distribución."], "microsegundo": ["Una millonésima de segundo; se representa con el símbolo µs. Los intervalos entre tramas suelen expresarse en esta unidad."], "OFDM": ["Orthogonal Frequency Division Multiplexing: técnica física que distribuye la transmisión en varias subportadoras. Sus parámetros influyen en los tiempos usados en ejemplos de acceso."], "CWmin": ["Valor mínimo o inicial del parámetro de ventana de contención para el procedimiento y la configuración correspondientes."], "CWmax": ["Límite superior del parámetro de ventana de contención; el crecimiento por fallos no debe superarlo."], "cuerpo de trama": ["Parte de la trama que contiene el contenido transportado o información específica de administración. Su presencia y tamaño dependen del tipo de trama."], "fragmento": ["Parte de una unidad de información dividida en varias piezas para transmitirla. Sequence Control incluye un número para distinguir fragmentos."]});
+Object.assign(glossary, authenticationGlossary);
 const slug=t=>'def-'+t.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-');
 const t=x=>`<a class="term" href="#${slug(x)}">${x}</a>`;
 const lessons=buildLessons(t, slug);
@@ -179,3 +180,5 @@ const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isInt
 initializeArchitecture();
 
 initializeFrameLesson();
+
+initializeAuthenticationLesson();

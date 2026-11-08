@@ -138,10 +138,6 @@ const wifiStory = (() => {
 })();
 
 function initializeWifiStory(){
-  Object.assign(glossary,{
-    'autenticación abierta':['Open System: intercambio básico de una solicitud y una respuesta de administración antes de la asociación. No comprueba una contraseña.'],
-    'AID':['Association Identifier: número que el AP asigna a una asociación aceptada. Identifica esa asociación dentro del AP; no sustituye a la dirección MAC.']
-  });
   renderTerms();
   const root=document.getElementById('wifi-story');
   const {steps,states,chapters}=wifiStory;
