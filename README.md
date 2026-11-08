@@ -13,7 +13,7 @@ Página educativa en español para estudiar IEEE 802.11 y la capa de enlace de d
 - Términos enlazados con definiciones en una ventana emergente, sin saltos de lectura; cierre con botón, Escape o clic fuera. El glosario completo conserva su buscador.
 - Mini cuestionario al final de cada uno de los siete temas: 3 preguntas, corrección con explicaciones, enlace de repaso y nuevos intentos independientes del parcial final.
 - Diagramas y tres laboratorios interactivos paso a paso, con estados visuales de las estaciones en cada etapa.
-- Arquitectura visual: mapa SVG explorable de dos BSS, diagrama de las subcapas LLC/MAC y desglose gráfico de SSID, BSSID y dirección MAC.
+- Arquitectura visual: STA/AP → BSS → sistema de distribución (DS) → ESS → SSID/BSSID. El mapa SVG permite explorar cada BSS, su conexión y el ESS completo; incluye preguntas de repaso y una definición enlazada de ESS.
 - Ejemplo A=3/C=5 animado en 13 pasos: reproducir/pausar, anterior, siguiente y reiniciar; contadores, congelación y envíos DATOS/ACK visibles. La animación se pausa al ocultar la pestaña y respeta la preferencia de movimiento reducido.
 - RTS/CTS animado en 11 pasos: riesgo del nodo oculto, acceso inicial, solicitud, respuesta del AP escuchada por C, reserva NAV y secuencia DATOS/ACK. Incluye reproducción, pausa, velocidades y navegación manual.
 - Tramas: tarjetas de clases, un sobre explorable por partes y una animación de nueve etapas de A al AP y del AP a C. Los detalles de campos y direcciones quedan en desplegables.

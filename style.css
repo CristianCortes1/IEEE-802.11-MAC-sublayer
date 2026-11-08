@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+.ess-boundary{fill:none;stroke:var(--line);stroke-width:2}.ess-label{fill:var(--teal);font:600 17px 'Space Grotesk',sans-serif;text-anchor:middle}
+#architecture-map[data-focus=ess] .ess-boundary{stroke:var(--teal);stroke-width:4}
+#architecture-map[data-focus=ess] .bss-zone{stroke-opacity:1;fill-opacity:.12}
+#architecture-map[data-focus=ess] .wired{stroke:var(--teal);stroke-width:4}
 .confirm-answer{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px}.confirm-answer span{font-size:12px;color:var(--muted)}.confirm-answer button:disabled{border-color:var(--teal);color:var(--teal);cursor:default}
 .live-exam-grade{position:sticky;top:8px;z-index:2;display:flex;align-items:center;gap:24px;padding:18px 22px;margin:25px 0;background:var(--bg);border:2px solid var(--teal);border-radius:12px;box-shadow:0 4px 16px #0001}.live-exam-grade strong{display:block;font:600 29px 'Space Grotesk',sans-serif;white-space:nowrap}.live-exam-grade .qmeta{margin:0}.live-exam-grade b{font-size:14px}.live-exam-grade small{display:block;font-size:11px;line-height:1.5;color:var(--muted);max-width:450px}
 @media(max-width:700px){.live-exam-grade{gap:12px;padding:12px;top:4px}.live-exam-grade strong{font-size:21px}.live-exam-grade small{font-size:10px}.live-exam-grade .qmeta{font-size:9px}}

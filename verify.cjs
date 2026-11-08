@@ -94,13 +94,18 @@ assert.match(get('lessons').innerHTML,/architecture-map-title/);
 assert.match(get('lessons').innerHTML,/layer-diagram/);
 assert.match(get('lessons').innerHTML,/mac-bytes/);
 assert.equal(get('architecture-map').attributes['data-focus'],'bss1');
-for(const key of ['bss2','distribution','bss1']){
+for(const key of ['bss2','distribution','ess','bss1']){
   get('arch-'+key).onclick();
   assert.equal(get('architecture-map').attributes['data-focus'],key);
   assert.equal(get('arch-'+key).attributes['aria-pressed'],'true');
-  for(const other of ['bss1','bss2','distribution'].filter(name=>name!==key))assert.equal(get('arch-'+other).attributes['aria-pressed'],'false');
+  for(const other of ['bss1','bss2','distribution','ess'].filter(name=>name!==key))assert.equal(get('arch-'+other).attributes['aria-pressed'],'false');
   assert.ok(get('architecture-detail').innerHTML.length>100);
 }
+get('arch-ess').onclick();
+assert.match(get('architecture-detail').innerHTML,/ESS: el conjunto extendido/);
+assert.match(get('lessons').innerHTML,/ess-boundary/);
+assert.equal(vm.runInContext('Object.hasOwn(glossary,"ESS")',context),true);
+assert.ok(questions.some(q=>q.q.includes('ESS')&&q.s===2));
 const miniQuizzes=vm.runInContext('topicQuizzes',context);
 assert.equal(miniQuizzes.length,7);
 for(const [index,items] of miniQuizzes.entries()){

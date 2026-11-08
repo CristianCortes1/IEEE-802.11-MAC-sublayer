@@ -22,25 +22,33 @@ function buildLessons(t, slug) {
     `],
     ['Arquitectura y MAC','Quién participa y qué hace MAC.',`
       <p class="intro">La arquitectura describe los participantes y sus relaciones. La subcapa MAC contiene las reglas con las que esos participantes usan el enlace. Entender primero a los actores evita confundir el nombre de una red con una dirección.</p>
-      <h3>1. Estación, AP y conjunto de servicio</h3>
+      <h3>1. Los participantes: estación y AP</h3>
       <p>Una ${t('estación')} es un dispositivo con funciones MAC y PHY de 802.11. Tu portátil es una estación. Un ${t('AP')} —Access Point o punto de acceso— también es una estación, pero cumple una función especial: permite que otras estaciones se asocien a él y comunica ese conjunto con el ${t('sistema de distribución')}.</p>
+      <h3>2. BSS: el conjunto de un AP</h3>
       <p>En el ${t('modo infraestructura')}, el AP y las estaciones asociadas forman un ${t('BSS')}, un conjunto básico de servicio. Para visualizarlo, imagina un aula con un AP y veinte portátiles. El AP no es dueño exclusivo del tiempo de radio: en el acceso distribuido que estudiaremos también tiene que competir cuando quiere iniciar una transmisión.</p>
+      <h3>3. Sistema de distribución: la unión entre AP</h3>
+      <p>Si instalamos otro AP, tendremos otro conjunto de estaciones. El ${t('sistema de distribución')}, abreviado <strong>DS</strong>, interconecta estos AP y permite transportar contenido entre sus conjuntos. En el dibujo usamos una conexión cableada como ejemplo.</p>
+      <h3>4. ESS: la red extendida</h3>
+      <p>${t('ESS')} significa <em>Extended Service Set</em>, conjunto de servicio extendido. En nuestro ejemplo reúne <strong>BSS 1 + BSS 2, unidos por el DS</strong>. Sirve para extender la red a más zonas: un AP puede atender un aula y otro atender la siguiente.</p>
+      <div class="callout"><strong>BSS es un conjunto; ESS es el conjunto extendido.</strong> Añadir otro portátil a un AP no crea otro BSS. En el mapa hay dos BSS porque se muestran dos conjuntos atendidos por AP distintos, y ambos están integrados mediante el mismo DS.</div>
       ${architecture.topology}
-      <p>El ${t('SSID')} es el nombre anunciado de la red, como «Aula». El ${t('BSSID')} identifica un BSS concreto. Dos AP pueden anunciar el mismo SSID y tener BSSID diferentes. Así, «veo el mismo nombre» no significa «estoy usando exactamente el mismo punto de acceso».</p>
-      <h3>2. Por qué la capa de enlace se divide en LLC y MAC</h3>
+      <h3>5. SSID y BSSID: nombre e identificador</h3>
+      <p>El ${t('SSID')} es el nombre anunciado de la red, como «Aula». El ${t('BSSID')} identifica un BSS concreto. Dos AP pueden anunciar el mismo SSID y tener BSSID diferentes. Así, «veo el mismo nombre» no significa «estoy usando exactamente el mismo punto de acceso». En este ESS los dos BSS anuncian «Aula», pero conservan BSSID diferentes. <strong>Repetir el SSID en dos redes independientes no las convierte por sí solo en un ESS.</strong></p>
+      <h3>6. Por qué la capa de enlace se divide en LLC y MAC</h3>
       <p>Una ${t('subcapa')} es una división de tareas dentro de una capa. La división clásica IEEE 802 separa ${t('LLC')} —Logical Link Control, control de enlace lógico— y MAC —Medium Access Control, control de acceso al medio—. LLC proporciona una interfaz lógica para identificar y entregar el contenido transportado; MAC resuelve las particularidades de acceder al medio y manejar sus tramas.</p>
       ${architecture.stack}
       ${table(['Pregunta','Responsabilidad principal'],[['¿Cómo se identifica el contenido para entregarlo a quien corresponde dentro del equipo?','LLC en la organización clásica del enlace.'],['¿Puedo transmitir ahora por este canal?','MAC.'],['¿Qué direcciones y qué tipo lleva la trama?','MAC.'],['¿La comprobación de la trama indica errores y debo confirmarla?','MAC.']])}
       <p>Piensa en una oficina de envíos: LLC se parece a la clasificación lógica del contenido; MAC se parece a preparar el sobre del enlace y decidir cuándo puede salir. La comparación ayuda a separar funciones, pero LLC no es una persona ni MAC una oficina real.</p>
-      <h3>3. Las tareas de MAC, una por una</h3>
+      <h3>7. Las tareas de MAC, una por una</h3>
       <ol><li><strong>Construir e interpretar tramas:</strong> colocar y leer campos de control, direcciones y contenido.</li><li><strong>Acceder al medio:</strong> escuchar, esperar y competir antes de iniciar una transmisión.</li><li><strong>Direccionar:</strong> distinguir quién transmite, quién recibe y qué equipos son origen y destino.</li><li><strong>Detectar errores:</strong> añadir y comprobar FCS, el campo que estudiaremos en el capítulo 5.</li><li><strong>Recuperar entregas fallidas:</strong> gestionar confirmaciones, esperas y retransmisiones cuando el intercambio lo requiere.</li><li><strong>Administrar la relación inalámbrica:</strong> participar en el descubrimiento, la asociación y otras operaciones de gestión.</li></ol>
-      <h3>4. Leer una dirección MAC</h3>
+      <h3>8. Leer una dirección MAC</h3>
       <p>Una ${t('dirección MAC')} de 802.11 tiene 48 ${t('bit')}s. Como un ${t('byte')} contiene 8 bits, son 6 bytes. Se escribe normalmente en ${t('hexadecimal')}: <code>02:1A:2B:3C:4D:5E</code>. Cada grupo tiene dos cifras hexadecimales y representa un byte. Los dos puntos solo ayudan a leerla.</p>
       <p>Una dirección identifica una interfaz en el contexto del enlace. Por ejemplo, el portátil y el AP utilizan direcciones distintas para indicar quién transmite y quién recibe. Las direcciones permiten expresar envíos ${t('unicast')} a un destinatario, ${t('multicast')} a un grupo o ${t('broadcast')} a todos dentro del ámbito de difusión correspondiente.</p>
       ${architecture.addresses}
-      <h3>5. Por qué MAC no funciona igual en Ethernet y Wi-Fi</h3>
+      <h3>9. Por qué MAC no funciona igual en Ethernet y Wi-Fi</h3>
       ${table(['Aspecto',t('Ethernet'),t('Wi-Fi')],[['Medio habitual','Cable; un enlace conmutado puede ser exclusivo entre dos interfaces.','Radio; varias estaciones próximas pueden competir por el mismo canal.'],['Acceso','En Ethernet compartido antiguo y semidúplex se usa CSMA/CD. En enlaces conmutados de dúplex completo no.','El acceso distribuido usa CSMA/CA; existen mecanismos adicionales según versión.'],['Direcciones de la trama','Campos de origen y destino.','Hasta cuatro campos para representar distintas funciones del enlace.'],['Confirmación inmediata','No usa el intercambio de ACK MAC por trama propio de 802.11.','Muchos intercambios dirigidos requieren ACK.']])}
       <p>${t('semidúplex')} significa usar un medio por turnos para transmitir y recibir. ${t('dúplex completo')} permite ambas cosas simultáneamente en un enlace. En el canal inalámbrico del modelo clásico, las estaciones se turnan; tener un AP no elimina la necesidad de coordinarse.</p>
+      ${check('¿Dos redes con el mismo nombre ya forman un ESS?', 'No. El nombre SSID por sí solo no une redes. En el ejemplo, el ESS reúne dos BSS integrados por el mismo sistema de distribución. Cada uno mantiene su propio BSSID.')}
       ${check('¿SSID, BSSID y dirección MAC de mi portátil son lo mismo?', 'No. SSID es un nombre de red; BSSID identifica el conjunto básico de servicio; la interfaz de tu portátil tiene su propia dirección MAC. Son funciones distintas aunque BSSID también tenga formato de dirección de 48 bits.')}
     `],
     ['CSMA/CA','Cómo se consigue un turno en el aire.',`
