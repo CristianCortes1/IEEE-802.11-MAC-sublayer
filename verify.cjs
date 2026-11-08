@@ -50,23 +50,32 @@ const quiz = get('quiz');
 questions.forEach((q,i)=>{if(q.match) quiz.elements['q'+i]={value:''};});
 get('grade').onclick();
 assert.match(get('result').textContent,/^0 \/ 16/);
-assert.match(get('feedback0').innerHTML,/Sin responder/);
+assert.match(get('feedback0').innerHTML,/Sin confirmar/);
+get('confirm0').onclick();assert.match(get('confirm-status0').textContent,/Selecciona/);
 questions.forEach((q,i)=>{if(q.match)quiz.elements['q'+i].value=String(q.a[0]);else selections['q'+i]=[...q.a];});
 quiz.onchange();
+assert.equal(get('live-grade').textContent,'0.00 / 5.00');
+questions.forEach((_,i)=>get('confirm'+i).onclick());
 assert.equal(get('live-grade').textContent,'5.00 / 5.00');
-assert.equal(get('live-answered').textContent,'16 de 16 respondidas');
+assert.equal(get('live-answered').textContent,'16 de 16 confirmadas');
 get('grade').onclick();
 assert.match(get('result').textContent,/^16 \/ 16/);
-selections.q1.push(1); // An extra incorrect choice must invalidate the answer.
+selections.q1.push(1);quiz.onchange();
+assert.equal(get('confirm1').disabled,false);
+assert.equal(get('live-grade').textContent,'4.69 / 5.00');
+get('confirm1').onclick(); // An extra incorrect choice must invalidate the answer.
 get('grade').onclick();
 assert.match(get('result').textContent,/^15 \/ 16/);
 assert.equal(get('live-grade').textContent,'4.69 / 5.00');
 assert.match(get('feedback1').innerHTML,/href="#tema2"/);
 get('reset').onclick();
 assert.equal(get('live-grade').textContent,'0.00 / 5.00');
-assert.equal(get('live-answered').textContent,'0 de 16 respondidas');
-selections.q0=[1];quiz.onchange();assert.equal(get('live-grade').textContent,'0.31 / 5.00');
+assert.equal(get('live-answered').textContent,'0 de 16 confirmadas');
+selections.q0=[1];quiz.onchange();assert.equal(get('live-grade').textContent,'0.00 / 5.00');
+get('confirm0').onclick();assert.equal(get('live-grade').textContent,'0.31 / 5.00');
+assert.equal(get('confirm0').disabled,true);
 selections.q0=[0];quiz.onchange();assert.equal(get('live-grade').textContent,'0.00 / 5.00');
+assert.equal(get('confirm0').disabled,false);get('confirm0').onclick();assert.equal(get('live-grade').textContent,'0.00 / 5.00');
 get('reset').onclick();
 assert.equal(get('result').textContent,'');
 for(const [id,count] of [['simulador',7],['retry-lab',5]]) {

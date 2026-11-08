@@ -19,7 +19,7 @@ Página educativa en español para estudiar IEEE 802.11 y la capa de enlace de d
 - Tramas: tarjetas de clases, un sobre explorable por partes y una animación de nueve etapas de A al AP y del AP a C. Los detalles de campos y direcciones quedan en desplegables.
 - Parcial de 16 ejercicios con selección de una, dos o tres respuestas y asociaciones mediante listas desplegables.
 - Calificación, explicación y enlaces a las secciones que deben repasarse.
-- Nota provisional del parcial de 0 a 5, visible mientras respondes y actualizada en cada cambio. Se calcula sobre las 16 preguntas; las no respondidas valen cero.
+- Nota provisional del parcial de 0 a 5, visible mientras respondes y actualizada al confirmar cada respuesta. Se calcula sobre las 16 preguntas; las no confirmadas valen cero. Si editas una respuesta, debes confirmarla de nuevo.
 - Diseño adaptable a móviles y navegación con teclado.
 - Modos claro y oscuro: botón en la cabecera, preferencia guardada y tema del sistema en la primera visita.
 
