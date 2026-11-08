@@ -197,6 +197,60 @@ assert.equal(get('rts-play').attributes['aria-pressed'],'false');
 get('rts-play').onclick();assert.equal(timers.size,1);
 context.document.hidden=true;popupEvents.visibilitychange();assert.equal(timers.size,0);context.document.hidden=false;
 get('rts-reset').onclick();assert.equal(get('rts-progress').attributes['aria-valuenow'],'1');
+// Full story: association must precede data, hidden stations learn NAV from CTS,
+// and seeking backwards restores the earlier state rather than mutating history.
+vm.runInContext(fs.readFileSync('full-story.js','utf8'),context,{filename:'full-story.js'});
+const story=vm.runInContext('wifiStory',context);
+assert.equal(story.chapters.length,7);
+assert.equal(new Set(story.steps.map(step=>step.id)).size,story.steps.length);
+const indexOf=id=>story.steps.findIndex(step=>step.id===id);
+const seekStory=id=>{get('story-position').value=String(indexOf(id));get('story-position').oninput();};
+for(const [index,step] of story.steps.entries()){
+  const state=story.states[index];
+  if(state.aAssoc)assert.ok(state.aAuth&&state.aArrived);
+  if(state.cAssoc)assert.ok(state.cAuth&&state.cArrived);
+  for(const message of step.messages||[]){
+    for(const sta of [message.from,message.to].filter(sta=>sta==='A'||sta==='C'))assert.ok(state[`${sta.toLowerCase()}Arrived`]);
+    if(message.kind==='data')assert.ok(state[`${message.from.toLowerCase()}Assoc`]);
+  }
+  for(const term of step.terms)assert.equal(vm.runInContext(`Object.hasOwn(glossary,${JSON.stringify(term)})`,context),true);
+}
+assert.equal(story.states[indexOf('a-rts')].navC,0);
+assert.equal(story.states[indexOf('a-cts')].navC,272);
+assert.equal(story.states[indexOf('a-retry-data')].navC,56);
+assert.equal(story.states[indexOf('a-retry-ack')].navC,0);
+assert.equal(story.states[indexOf('c-cts')].navA,272);
+assert.equal(story.states[indexOf('c-retry-ack')].navA,0);
+assert.equal(story.states[indexOf('a-cts')].backoffC,'Congelado');
+assert.equal(story.states[indexOf('a-rts')].backoffC,'En curso');
+seekStory('c-association-response');
+assert.match(get('story-stage').innerHTML,/Asociada · AID 2/);
+seekStory('a-arrives');
+assert.doesNotMatch(get('story-stage').innerHTML,/Asociada · AID 2/);
+assert.match(get('story-stage').innerHTML,/Aún no ha llegado/);
+get('story-chapter-5').onclick();
+assert.equal(get('story-position').value,String(story.chapters[5].start));
+assert.equal(get('story-chapter-5').attributes['aria-pressed'],'true');
+seekStory('a-cts');assert.match(get('story-stage').innerHTML,/Oye CTS/);
+assert.match(get('story-stage').innerHTML,/272 µs/);
+get('story-prev').onclick();
+assert.equal(get('story-position').value,String(indexOf('a-sifs-cts')));
+get('story-reset').onclick();assert.equal(get('story-position').value,'0');
+get('story-play').onclick();assert.equal(timers.size,1);
+get('story-play').onclick();assert.equal(timers.size,0);
+const pausedScene=get('story-stage').innerHTML;
+get('story-play').onclick();assert.equal(get('story-stage').innerHTML,pausedScene);
+get('story-speed').value='1600';get('story-speed').onchange();assert.equal(timers.size,1);
+let storyTicks=0;
+while(timers.size){assert.ok(++storyTicks<=story.steps.length);const [id,fn]=timers.entries().next().value;timers.delete(id);fn();}
+assert.equal(get('story-position').value,String(story.steps.length-1));
+assert.equal(get('story-next').disabled,true);
+assert.equal(get('story-play').attributes['aria-pressed'],'false');
+get('story-play').onclick();assert.equal(get('story-position').value,'0');
+context.document.hidden=true;popupEvents.visibilitychange();assert.equal(timers.size,0);context.document.hidden=false;
+get('story-play').onclick();popupEvents.click({target:{closest:()=>({})}});assert.equal(timers.size,0);
+get('story-reset').onclick();assert.equal(get('story-prev').disabled,true);
+assert.doesNotMatch(fs.readFileSync('full-story.js','utf8'),/capa\s*3|\bIP\b|router|\bQoS\b|\bEDCA\b|\bAIFS\b|Block ACK/i);
 const dialog = get('term-dialog');
 dialog.open = false;
 dialog.showModal = ()=>{dialog.open=true;};
@@ -227,4 +281,4 @@ popupEvents.click(popupClick({target:{closest:()=>({getAttribute:()=> '#def-unkn
 assert.equal(prevented,false);
 for(const match of html.matchAll(/(?:src|href)="([^"#?]+\.(?:js|css))(?:\?[^"#]*)?"/g)) assert.ok(fs.existsSync(match[1]),'Missing asset '+match[1]);
 for(const file of ['index.html','app.js','architecture.js','frames.js','lessons.js','lab-scenes.js','backoff-animation.js','rts-animation.js','mini-quizzes.js','glossary-dialog.js'])assert.doesNotMatch(fs.readFileSync(file,'utf8'),/capa\s*3|\bIP\b|router|encaminamiento|\bQoS\b|\bEDCA\b|\bAIFS\b|seguridad|autenticación|Block ACK/i);
-console.log('PASS: backoff animation/playback/pause/reset, architecture, chapters, glossary popup, assets, scope, final exam, mini quizzes, review links and laboratories.');
+console.log('PASS: complete Wi-Fi story/state restoration/playback, backoff, architecture, chapters, glossary popup, assets, scope, final exam, mini quizzes and laboratories.');

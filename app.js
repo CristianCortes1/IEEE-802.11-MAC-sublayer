@@ -71,7 +71,7 @@ Object.assign(glossary, {"enlace": ["Relación de comunicación entre interfaces
 const slug=t=>'def-'+t.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-');
 const t=x=>`<a class="term" href="#${slug(x)}">${x}</a>`;
 const lessons=buildLessons(t, slug);
-document.querySelector('#nav').innerHTML=lessons.map((l,i)=>`<a href="#tema${i+1}"><span>0${i+1}</span>${l[0]}</a>`).join('');
+document.querySelector('#nav').innerHTML=lessons.map((l,i)=>`<a href="#tema${i+1}"><span>0${i+1}</span>${l[0]}</a>`).join('')+'<a href="#historia-completa"><span>▶</span>Historia completa</a>';
 document.querySelector('#lessons').innerHTML=lessons.map((l,i)=>`<section id="tema${i+1}"><div class="eyebrow">CAPÍTULO 0${i+1} / ${l[0].toUpperCase()}</div><h2>${l[1]}</h2>${l[2]}</section>`).join('');
 function lab(id,title,steps){
   let current=0;const el=document.getElementById(id);
@@ -173,7 +173,7 @@ document.getElementById('reset').onclick=()=>{
 };
 quiz.onsubmit=e=>e.preventDefault();
 updateLiveGrade();
-const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.id))}})},{rootMargin:'-10% 0px -60% 0px'});document.querySelectorAll('#lessons section').forEach(s=>observer.observe(s));
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.id))}})},{rootMargin:'-10% 0px -60% 0px'});document.querySelectorAll('#lessons section, #historia-completa').forEach(s=>observer.observe(s));
 
 initializeArchitecture();
 
